@@ -1,3 +1,4 @@
+export { type FetchOptions, fetchBlockTree, type NotionBlock } from "./blocks";
 export { createDedupe } from "./dedupe";
 export {
   createRequestLimiter,
