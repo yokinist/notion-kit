@@ -154,6 +154,35 @@ describe("NotionBlocks bookmarks and embeds", () => {
     expect(images).toEqual([maxres("new"), hq("old")]);
   });
 
+  it("shows the artist and track like SoundCloud's own player", async () => {
+    serve({
+      "https://soundcloud.com/oembed": json({
+        title: "Flickermood by Forss",
+        author_name: "Forss",
+      }),
+    });
+    const dom = await renderToDom(
+      <NotionBlocks
+        blocks={[
+          block("embed", {
+            url: "https://soundcloud.com/forss/flickermood",
+            caption: [],
+          }),
+        ]}
+      />,
+    );
+
+    const card = dom.querySelector("button.notion-embed");
+    expect(card?.querySelector(".notion-embed-author")?.textContent).toBe(
+      "Forss",
+    );
+    expect(card?.querySelector(".notion-embed-title")?.textContent).toBe(
+      "Flickermood",
+    );
+    // Same height as the player, so loading it does not move the page
+    expect((card as HTMLElement | null)?.style.height).toBe("166px");
+  });
+
   it("renders posts on X with the Tweet component and other embeds as bookmarks", async () => {
     serve({ "https://bandcamp.example": html("<title>An album</title>") });
     const dom = await renderToDom(

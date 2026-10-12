@@ -33,7 +33,7 @@ const playerPreview = async (
   provider: string,
   url: string,
   init: RequestInit,
-): Promise<LinkPreview> => {
+): Promise<LinkPreview & { author?: string }> => {
   const endpoint = OEMBED[provider];
   if (!endpoint) return getLinkPreview(url, init);
   try {
@@ -44,13 +44,20 @@ const playerPreview = async (
     if (!response.ok) return {};
     const data = (await response.json()) as {
       title?: string;
+      author_name?: string;
       thumbnail_url?: string;
     };
     const image =
       provider === "YouTube" && data.thumbnail_url
         ? await youtubeThumbnail(data.thumbnail_url, init)
         : data.thumbnail_url;
-    return { title: data.title, image };
+    const author = data.author_name;
+    // SoundCloud titles are "Track by Artist"
+    const title =
+      author && data.title?.endsWith(` by ${author}`)
+        ? data.title.slice(0, -` by ${author}`.length)
+        : data.title;
+    return { title, image, author };
   } catch {
     // Private tracks have no oEmbed; their pages only have generic metadata
     return {};
@@ -93,7 +100,7 @@ export const Embed = async ({ url, ctx }: { url: string; ctx: Context }) => {
       );
     }
     case "player": {
-      const { title, image } = await playerPreview(
+      const { title, image, author } = await playerPreview(
         embed.provider,
         pageUrl,
         ctx.fetchInit,
@@ -104,6 +111,7 @@ export const Embed = async ({ url, ctx }: { url: string; ctx: Context }) => {
           provider={embed.provider}
           height={embed.height}
           title={title}
+          author={author}
           image={image}
           playLabel={ctx.labels.play}
         />
