@@ -82,6 +82,15 @@ audio {
   border-radius: 0.5rem;
   padding: 1rem;
 }
+/* Undo inline-code styles that typography CSS may also apply here */
+.notion-code pre code {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-size: inherit;
+}
 /* Shiki writes both themes as CSS variables */
 .shiki,
 .shiki span {
