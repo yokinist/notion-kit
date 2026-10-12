@@ -35,10 +35,12 @@ export const EmbedFacade = ({
       />
     );
   }
+  // Players without a fixed height are videos: show them as one
+  const video = !height;
   return (
     <button
       type="button"
-      className="notion-embed"
+      className={video ? "notion-embed notion-embed-video" : "notion-embed"}
       onClick={() => setActive(true)}
       aria-label={`${playLabel}: ${title ?? provider}`}
     >
@@ -49,7 +51,15 @@ export const EmbedFacade = ({
         <span className="notion-embed-provider">{provider}</span>
         <span className="notion-embed-title">{title ?? provider}</span>
       </span>
-      <span className="notion-embed-play">{playLabel}</span>
+      <span className="notion-embed-play">
+        {video ? (
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 5.5v13l10.5-6.5z" fill="currentColor" />
+          </svg>
+        ) : (
+          playLabel
+        )}
+      </span>
     </button>
   );
 };

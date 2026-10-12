@@ -152,6 +152,8 @@ audio {
   cursor: pointer;
 }
 .notion-embed-image {
+  /* typography CSS gives <img> vertical margins */
+  margin: 0;
   width: 4rem;
   height: 4rem;
   flex-shrink: 0;
@@ -177,6 +179,76 @@ audio {
   border-radius: 9999px;
   padding: 0.25rem 0.75rem;
   font-size: 0.75em;
+}
+/* Videos: a 16:9 thumbnail with a play button, the size of the player */
+.notion-embed-video {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  color: #fff;
+  background: #000;
+}
+.notion-embed-video .notion-embed-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  transition: transform 0.3s;
+}
+.notion-embed-video .notion-embed-text {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 2.5rem 1rem 0.875rem;
+  background: linear-gradient(transparent, rgb(0 0 0 / 0.75));
+}
+.notion-embed-video .notion-embed-provider {
+  color: rgb(255 255 255 / 0.75);
+}
+.notion-embed-video .notion-embed-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.notion-embed-video .notion-embed-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: rgb(0 0 0 / 0.6);
+  backdrop-filter: blur(4px);
+  transform: translate(-50%, -50%);
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+}
+.notion-embed-video .notion-embed-play svg {
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.2rem;
+}
+.notion-embed-video:hover .notion-embed-play,
+.notion-embed-video:focus-visible .notion-embed-play {
+  background: #e00;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+.notion-embed-video:hover .notion-embed-image {
+  transform: scale(1.03);
+}
+@media (prefers-reduced-motion: reduce) {
+  .notion-embed-video *,
+  .notion-embed-video:hover * {
+    transition: none;
+  }
 }
 .notion-embed-player {
   width: 100%;

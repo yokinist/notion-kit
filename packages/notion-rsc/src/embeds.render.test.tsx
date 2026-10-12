@@ -119,6 +119,38 @@ describe("NotionBlocks bookmarks and embeds", () => {
     expect(labels).toEqual(["再生する: A track", "再生する: A video"]);
   });
 
+  it("shows YouTube's high-resolution thumbnail when the video has one", async () => {
+    const hq = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+    const maxres = (id: string) =>
+      `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+    serve({
+      "https://www.youtube.com/oembed?format=json&url=https%3A%2F%2Fyoutu.be%2Fnew":
+        json({ title: "New", thumbnail_url: hq("new") }),
+      "https://www.youtube.com/oembed?format=json&url=https%3A%2F%2Fyoutu.be%2Fold":
+        json({ title: "Old", thumbnail_url: hq("old") }),
+      [maxres("new")]: () => new Response(""),
+      [maxres("old")]: () => new Response("", { status: 404 }),
+    });
+    const video = (id: string) =>
+      block(
+        "video",
+        {
+          type: "external",
+          external: { url: `https://youtu.be/${id}` },
+          caption: [],
+        },
+        { id },
+      );
+    const dom = await renderToDom(
+      <NotionBlocks blocks={[video("new"), video("old")]} />,
+    );
+
+    const images = [...dom.querySelectorAll("button.notion-embed img")].map(
+      (img) => img.getAttribute("src"),
+    );
+    expect(images).toEqual([maxres("new"), hq("old")]);
+  });
+
   it("renders posts on X with the Tweet component and other embeds as bookmarks", async () => {
     serve({ "https://bandcamp.example": html("<title>An album</title>") });
     const dom = await renderToDom(

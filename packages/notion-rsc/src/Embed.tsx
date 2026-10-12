@@ -12,6 +12,23 @@ const OEMBED: Record<string, string> = {
   Spotify: "https://open.spotify.com/oembed?url=",
 };
 
+// YouTube's oEmbed thumbnail is 480x360 with black bars; most videos also
+// have a sharp 16:9 one
+const youtubeThumbnail = async (image: string, init: RequestInit) => {
+  const maxres = image.replace(/\/hqdefault\.jpg$/, "/maxresdefault.jpg");
+  if (maxres === image) return image;
+  try {
+    const response = await fetch(maxres, {
+      method: "HEAD",
+      signal: AbortSignal.timeout(10_000),
+      ...init,
+    });
+    return response.ok ? maxres : image;
+  } catch {
+    return image;
+  }
+};
+
 const playerPreview = async (
   provider: string,
   url: string,
@@ -29,7 +46,11 @@ const playerPreview = async (
       title?: string;
       thumbnail_url?: string;
     };
-    return { title: data.title, image: data.thumbnail_url };
+    const image =
+      provider === "YouTube" && data.thumbnail_url
+        ? await youtubeThumbnail(data.thumbnail_url, init)
+        : data.thumbnail_url;
+    return { title: data.title, image };
   } catch {
     // Private tracks have no oEmbed; their pages only have generic metadata
     return {};
