@@ -133,15 +133,56 @@ export default async function Page() {
   ]),
   b("divider", {}),
   b("heading_1", rich(t("Media and embeds"))),
+  b("heading_2", rich(t("Images and files"))),
   b("image", {
     type: "external",
     external: { url: "/demo.svg" },
     caption: [t("Images get a caption from <figcaption>.")],
   }),
+  b("audio", {
+    type: "external",
+    external: { url: "/demo.wav" },
+    caption: [],
+  }),
+  b("file", {
+    type: "external",
+    external: { url: "/demo.svg" },
+    name: "demo.svg",
+    caption: [],
+  }),
+  b("heading_2", rich(t("Bookmarks"))),
+  b(
+    "paragraph",
+    rich(
+      t(
+        "The official API only gives a bookmark's URL, so the title, description and image come from the page's Open Graph tags.",
+      ),
+    ),
+  ),
   b("bookmark", { url: "https://react.dev", caption: [] }),
+  b("bookmark", { url: "https://github.com/vercel/next.js", caption: [] }),
+  b("heading_2", rich(t("Players"))),
+  b(
+    "paragraph",
+    rich(
+      t(
+        "Players show a preview from oEmbed and load only when clicked, so they set no third-party cookies until then.",
+      ),
+    ),
+  ),
   b("video", {
     type: "external",
     external: { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
     caption: [],
   }),
+  b("embed", {
+    url: "https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT",
+    caption: [],
+  }),
+  b("embed", {
+    url: "https://soundcloud.com/forss/flickermood",
+    caption: [],
+  }),
+  b("heading_2", rich(t("Posts on X"))),
+  b("embed", { url: "https://x.com/jack/status/20", caption: [] }),
 ];
