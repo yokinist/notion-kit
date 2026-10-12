@@ -1,0 +1,16 @@
+# notion-kit with Next.js
+
+A blog on a Notion database, with the Next.js App Router. Pages are static and revalidate every minute (ISR).
+
+| File | What it does |
+| --- | --- |
+| `lib/notion.ts` | The Notion client, a shared rate limiter, and `getPosts()` reading the database |
+| `app/page.tsx` | The post list |
+| `app/posts/[slug]/page.tsx` | A post, rendered by `<NotionBlocks>`; links to other posts point to their pages here |
+| `app/api/notion/file/[id]/route.ts` | Redirects to fresh URLs of files uploaded to Notion |
+
+See [the examples README](..) to set up the database and token, then:
+
+```bash
+npm run dev -w examples/next-blog
+```

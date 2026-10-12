@@ -4,10 +4,11 @@
   "type": "module",
   "workspaces": [
     "packages/*",
-    "docs"
+    "docs",
+    "examples/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build -w packages -w docs",
     "test": "npm test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "biome check ."
