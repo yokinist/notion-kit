@@ -1,7 +1,7 @@
 {
   "name": "@yokinist/notion-rsc",
-  "version": "0.0.0",
-  "description": "Render Notion blocks with React Server Components, with no client JavaScript",
+  "version": "0.1.0",
+  "description": "Render Notion blocks with React Server Components: your content ships as HTML, not JavaScript",
   "license": "MIT",
   "author": "yokinist",
   "repository": {
@@ -64,5 +64,12 @@
     "typescript": "^5.9.3",
     "vite": "^8.3.4",
     "vitest": "^5.0.4"
+  },
+  "homepage": "https://github.com/yokinist/notion-kit/tree/main/packages/notion-rsc#readme",
+  "bugs": {
+    "url": "https://github.com/yokinist/notion-kit/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

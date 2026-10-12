@@ -84,7 +84,7 @@ export const demoBlocks: NotionBlock[] = [
   ]),
   b("to_do", { ...rich(t("Render Notion pages")), checked: true }),
   b("to_do", {
-    ...rich(t("Ship no client JavaScript for them")),
+    ...rich(t("Ship them as HTML, not JavaScript")),
     checked: false,
   }),
   b("toggle", rich(t("Toggles become <details>")), [

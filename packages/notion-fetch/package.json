@@ -1,6 +1,6 @@
 {
   "name": "@yokinist/notion-fetch",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Rate-limit-safe Notion API helpers: block trees, database rows, and fresh URLs for uploaded files",
   "license": "MIT",
   "author": "yokinist",
@@ -44,5 +44,12 @@
     "typescript": "^5.9.3",
     "vite": "^8.3.4",
     "vitest": "^5.0.4"
+  },
+  "homepage": "https://github.com/yokinist/notion-kit/tree/main/packages/notion-fetch#readme",
+  "bugs": {
+    "url": "https://github.com/yokinist/notion-kit/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

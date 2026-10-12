@@ -20,7 +20,7 @@ export default function HomePage() {
         <h1 className="text-4xl font-bold tracking-tight">notion-kit</h1>
         <p className="text-lg text-fd-muted-foreground">
           Build sites on the official Notion API, rendered with React Server
-          Components. No client JavaScript for your content.
+          Components. Your content ships as HTML, not JavaScript.
         </p>
         <div className="flex gap-3">
           <Link
