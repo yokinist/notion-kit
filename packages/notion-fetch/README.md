@@ -1,5 +1,7 @@
 # @yokinist/notion-fetch
 
+**[Documentation](https://notion-kit-docs.vercel.app/docs/notion-fetch)** · [Demo](https://notion-kit-docs.vercel.app/docs/demo)
+
 Small helpers for building sites on the [official Notion API](https://developers.notion.com) (`@notionhq/client`):
 
 - **Rate-limit safe requests.** Notion allows about 3 requests per second per integration. Statically generating many pages at once hits that quickly, and the official client gives up after a couple of retries. `createRequestLimiter` caps requests in flight and keeps retrying rate limits (waiting for Notion's `retry_after`) and timeouts.

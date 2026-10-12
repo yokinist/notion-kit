@@ -1,5 +1,7 @@
 # @yokinist/notion-rsc
 
+**[Documentation](https://notion-kit-docs.vercel.app/docs/notion-rsc)** · [Demo](https://notion-kit-docs.vercel.app/docs/demo)
+
 Render Notion pages with [React Server Components](https://react.dev/reference/rsc/server-components), using the [official Notion API](https://developers.notion.com).
 
 - **Content ships as HTML, not JavaScript.** Blocks render on the server to plain, semantic HTML (`p`, `h2`, `ul`, `figure`, `table`, …), so the renderer never reaches the browser. The only client code is the click-to-load player for embeds and react-tweet's few interactive parts of posts on X.

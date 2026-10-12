@@ -7,7 +7,7 @@ Build sites on the [official Notion API](https://developers.notion.com), with Re
 | [`@yokinist/notion-fetch`](packages/notion-fetch) | Fetch pages and database rows without hitting rate limits, and serve uploaded files from URLs that do not expire. No framework needed. |
 | [`@yokinist/notion-rsc`](packages/notion-rsc) | Render Notion blocks to HTML on the server, with Shiki, KaTeX and click-to-load embeds. Needs only React 19. |
 
-Documentation and a live demo are in [`docs`](docs) (Next.js + Fumadocs): `npm run dev -w docs`.
+**[Documentation](https://notion-kit-docs.vercel.app)** · [Demo](https://notion-kit-docs.vercel.app/docs/demo). The site's source is in [`docs`](docs) (Next.js + Fumadocs): `npm run dev -w docs`.
 
 ## Development
 
