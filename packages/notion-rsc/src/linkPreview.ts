@@ -33,6 +33,15 @@ const meta = (html: string, names: string[]) => {
   }
 };
 
+const absolute = (path: string | undefined, base: string) => {
+  if (!path) return undefined;
+  try {
+    return new URL(path, base).href;
+  } catch {
+    return undefined;
+  }
+};
+
 /**
  * Title, description and image of a web page, from its Open Graph (or plain
  * HTML) metadata. The official Notion API only gives a bookmark's URL.
@@ -63,7 +72,10 @@ export const getLinkPreview = async (
         "twitter:description",
         "description",
       ]),
-      image: meta(html, ["og:image", "twitter:image"]),
+      image: absolute(
+        meta(html, ["og:image", "twitter:image"]),
+        response.url || url,
+      ),
     };
   } catch {
     return {};

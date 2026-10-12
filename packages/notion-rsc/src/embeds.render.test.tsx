@@ -23,10 +23,10 @@ afterEach(() => {
 });
 
 describe("NotionBlocks bookmarks and embeds", () => {
-  it("renders bookmarks as cards with the page's title and description", async () => {
+  it("renders bookmarks as cards with the page's title, description and image", async () => {
     serve({
       "https://example.com/post": html(
-        `<meta property="og:title" content="A post"><meta property="og:description" content="About it">`,
+        `<meta property="og:title" content="A post"><meta property="og:description" content="About it"><meta property="og:image" content="https://example.com/cover.png">`,
       ),
     });
     const dom = await renderToDom(
@@ -47,6 +47,9 @@ describe("NotionBlocks bookmarks and embeds", () => {
     ).toBe("About it");
     expect(card?.querySelector(".notion-bookmark-host")?.textContent).toBe(
       "example.com",
+    );
+    expect(card?.querySelector("img")?.getAttribute("src")).toBe(
+      "https://example.com/cover.png",
     );
   });
 

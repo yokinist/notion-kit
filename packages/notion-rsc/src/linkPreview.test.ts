@@ -38,6 +38,13 @@ describe("getLinkPreview", () => {
     });
   });
 
+  it("resolves a relative image against the page's URL", async () => {
+    serve(`<meta property="og:image" content="/images/cover.png">`);
+
+    const { image } = await getLinkPreview("https://example.com/posts/1");
+    expect(image).toBe("https://example.com/images/cover.png");
+  });
+
   it("returns nothing when the page cannot be fetched", async () => {
     serve("Not found", 404);
     await expect(getLinkPreview("https://example.com")).resolves.toEqual({});

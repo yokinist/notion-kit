@@ -116,11 +116,20 @@ audio {
 }
 
 .notion-bookmark {
-  display: block;
+  display: flex;
+  overflow: hidden;
   margin: 1.5rem 0;
-  padding: 1rem;
   text-decoration: none;
   color: inherit;
+  transition: background-color 0.2s;
+}
+.notion-bookmark:hover {
+  background-color: rgb(127 127 127 / 0.06);
+}
+.notion-bookmark-text {
+  min-width: 0;
+  flex: 1;
+  padding: 0.875rem 1rem;
 }
 .notion-bookmark-title,
 .notion-bookmark-description,
@@ -133,11 +142,26 @@ audio {
   font-weight: 600;
   white-space: nowrap;
 }
+.notion-bookmark-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
 .notion-bookmark-description,
 .notion-bookmark-host {
   margin-top: 0.25rem;
   font-size: 0.875em;
+  line-height: 1.5;
   color: var(--notion-muted);
+}
+.notion-bookmark-image {
+  /* Open Graph images are 1.91:1; wide cards show them nearly whole */
+  width: min(15rem, 40%);
+  margin: 0;
+  flex-shrink: 0;
+  border-left: 1px solid var(--notion-border);
+  object-fit: cover;
 }
 
 .notion-embed {
