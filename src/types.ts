@@ -16,5 +16,10 @@ export type NotionBlocksOptions = {
   pageUrl?: (pageId: string) => string | undefined;
 };
 
+export type Heading = { id: string; level: 1 | 2 | 3; text: string };
+
 /** Resolved options passed down while rendering. */
-export type Context = Required<NotionBlocksOptions>;
+export type Context = Required<NotionBlocksOptions> & {
+  // Headings of the top-level blocks, for table_of_contents
+  headings: Heading[];
+};
