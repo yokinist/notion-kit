@@ -206,6 +206,12 @@ audio {
   padding: 0.25rem 0.75rem;
   font-size: 0.75em;
 }
+.notion-embed-play svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 0.15rem;
+}
+
 /* Videos: a 16:9 thumbnail with a play button, the size of the player */
 .notion-embed-video {
   position: relative;
@@ -268,20 +274,6 @@ audio {
   width: 2rem;
   height: 2rem;
   margin-left: 0.2rem;
-}
-.notion-embed-video:hover .notion-embed-play,
-.notion-embed-video:focus-visible .notion-embed-play {
-  background: #e00;
-  transform: translate(-50%, -50%) scale(1.08);
-}
-.notion-embed-video:hover .notion-embed-image {
-  transform: scale(1.03);
-}
-@media (prefers-reduced-motion: reduce) {
-  .notion-embed-video *,
-  .notion-embed-video:hover * {
-    transition: none;
-  }
 }
 /* Spotify: the artwork's colors behind it, as in Spotify's player */
 .notion-embed-spotify {
@@ -354,11 +346,6 @@ audio {
   background: #fff;
   transition: transform 0.2s;
 }
-.notion-embed-spotify:hover .notion-embed-play,
-.notion-embed-spotify:focus-visible .notion-embed-play {
-  transform: scale(1.06);
-}
-
 /* SoundCloud: light, with the orange play button and a waveform */
 .notion-embed-soundcloud {
   container-type: inline-size;
@@ -399,10 +386,6 @@ audio {
   border: 0;
   color: #fff;
   background: linear-gradient(#ff7700, #ff3300);
-}
-.notion-embed-soundcloud:hover .notion-embed-play,
-.notion-embed-soundcloud:focus-visible .notion-embed-play {
-  filter: brightness(1.08);
 }
 .notion-embed-author {
   display: block;
@@ -460,10 +443,29 @@ audio {
   }
 }
 
-.notion-embed-play svg {
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-left: 0.15rem;
+/* Hover and focus, after the rules they override */
+.notion-embed-video:hover .notion-embed-play,
+.notion-embed-video:focus-visible .notion-embed-play {
+  background: #e00;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+.notion-embed-video:hover .notion-embed-image {
+  transform: scale(1.03);
+}
+@media (prefers-reduced-motion: reduce) {
+  .notion-embed .notion-embed-image,
+  .notion-embed .notion-embed-play,
+  .notion-bookmark {
+    transition: none;
+  }
+}
+.notion-embed-spotify:hover .notion-embed-play,
+.notion-embed-spotify:focus-visible .notion-embed-play {
+  transform: scale(1.06);
+}
+.notion-embed-soundcloud:hover .notion-embed-play,
+.notion-embed-soundcloud:focus-visible .notion-embed-play {
+  filter: brightness(1.08);
 }
 
 .notion-embed-player {
