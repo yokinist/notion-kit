@@ -40,6 +40,7 @@
     "lint": "biome check ."
   },
   "peerDependencies": {
+    "@notionhq/client": ">=5",
     "katex": ">=0.16",
     "react": ">=19",
     "react-tweet": ">=3",
@@ -64,6 +65,7 @@
     "@types/katex": "^0.16.8",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "happy-dom": "^21.0.1",
     "katex": "^0.19.0",
