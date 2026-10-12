@@ -1,0 +1,49 @@
+{
+  "name": "@yokinist/notion-kit",
+  "version": "0.0.0",
+  "description": "Rate-limit-safe Notion API helpers: block trees, database rows, and fresh URLs for uploaded files",
+  "license": "MIT",
+  "author": "yokinist",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yokinist/notion-kit.git"
+  },
+  "keywords": [
+    "notion",
+    "notion-api",
+    "rate-limit",
+    "signed-url"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check ."
+  },
+  "peerDependencies": {
+    "@notionhq/client": ">=5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@notionhq/client": "^5.27.0",
+    "@types/node": "^24.19.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
+  }
+}
