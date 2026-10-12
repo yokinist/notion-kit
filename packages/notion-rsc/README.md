@@ -1,6 +1,6 @@
 # @yokinist/notion-rsc
 
-**[Documentation](https://notion-kit-docs.vercel.app/docs/notion-rsc)** · [Demo](https://notion-kit-docs.vercel.app/docs/demo)
+**[Documentation](https://notion-kit-docs.vercel.app/docs/notion-rsc)** · [Demo](https://notion-kit-docs.vercel.app/docs/demo) · [Examples](https://github.com/yokinist/notion-kit/tree/main/examples)
 
 Render Notion pages with [React Server Components](https://react.dev/reference/rsc/server-components), using the [official Notion API](https://developers.notion.com).
 

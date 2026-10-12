@@ -9,6 +9,14 @@ Build sites on the [official Notion API](https://developers.notion.com), with Re
 
 **[Documentation](https://notion-kit-docs.vercel.app)** · [Demo](https://notion-kit-docs.vercel.app/docs/demo). The site's source is in [`docs`](docs) (Next.js + Fumadocs): `npm run dev -w docs`.
 
+## Examples
+
+Blogs on a Notion database in [Next.js](examples/next-blog), [React Router](examples/react-router-blog) and [TanStack Start](examples/tanstack-start-blog). Start your own from one:
+
+```bash
+npx giget@latest gh:yokinist/notion-kit/examples/next-blog my-blog
+```
+
 ## Development
 
 ```bash

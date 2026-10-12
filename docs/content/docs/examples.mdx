@@ -1,0 +1,42 @@
+---
+title: Examples
+description: Small blogs on a Notion database, in Next.js, React Router and TanStack Start.
+---
+
+Each example is a complete blog: a post list, post pages with links between posts, and a route that serves files uploaded to Notion. They read the same sample database, so you can compare how each framework does it.
+
+| Example | Framework |
+| --- | --- |
+| [next-blog](https://github.com/yokinist/notion-kit/tree/main/examples/next-blog) | Next.js App Router, with static pages that revalidate every minute |
+| [react-router-blog](https://github.com/yokinist/notion-kit/tree/main/examples/react-router-blog) | React Router in RSC Framework Mode, on Vite |
+| [tanstack-start-blog](https://github.com/yokinist/notion-kit/tree/main/examples/tanstack-start-blog) | TanStack Start with Server Components, on Vite |
+
+React Router's and TanStack Start's Server Components support is still experimental.
+
+## Start your own blog from one
+
+Copy an example out of the repository and run it:
+
+```bash
+npx giget@latest gh:yokinist/notion-kit/examples/next-blog my-blog
+cd my-blog
+cp .env.example .env.local
+npm install
+npm run dev
+```
+
+Swap `next-blog` for `react-router-blog` or `tanstack-start-blog` to start from another one.
+
+## What you need
+
+1. **A database** with a `title`, a `slug` (text) and a `date`, and optionally `summary` (text) and `tags` (multi-select).
+2. **An integration** from [Notion's integrations page](https://www.notion.so/profile/integrations) with only the **Read content** capability, connected to the page that holds the database (⋯ → Connections).
+3. **`.env.local`** with `NOTION_TOKEN` and `NOTION_DATABASE_ID`.
+
+## How the frameworks differ
+
+- **Next.js** renders posts in Server Components and caches them with ISR. Links between posts use `next/link`.
+- **React Router** routes export a `ServerComponent`; the post is fetched in the route's `loader`, which also returns the 404.
+- **TanStack Start** loaders also run in the browser on navigation, so the post is fetched and rendered in a server function with `renderServerComponent`.
+
+In all three, the file route is one line: notion-fetch's `createFileHandler` takes a `Request` and returns a `Response`.

@@ -66,5 +66,5 @@ export const GET = createFileHandler({ notion, limit });
 That's it. See the [demo](/docs/demo) for what each block looks like.
 
 <Callout title="Not using Next.js?">
-  notion-rsc needs only React 19 Server Components, so it works in Waku, React Router and other RSC frameworks, or with `prerender` from `react-dom/static`. `createFileHandler` takes a Web-standard `Request` and returns a `Response`, so it works with Hono, Cloudflare Workers and the like.
+  notion-rsc needs only React 19 Server Components, so it works in React Router, TanStack Start and other RSC frameworks; see the [examples](/docs/examples). `createFileHandler` takes a Web-standard `Request` and returns a `Response`, so it works with Hono, Cloudflare Workers and the like.
 </Callout>

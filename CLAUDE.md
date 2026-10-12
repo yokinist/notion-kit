@@ -4,6 +4,7 @@ Two npm packages for building sites on the official Notion API, plus their docs 
 
 - `packages/notion-fetch` (`@yokinist/notion-fetch`): rate-limited requests, block trees, database rows, property helpers, and a `Request → Response` handler that redirects to fresh URLs of uploaded files. No React, no framework.
 - `packages/notion-rsc` (`@yokinist/notion-rsc`): renders blocks with React Server Components. Shiki, KaTeX and react-tweet are dependencies; `EmbedFacade.tsx` is the only `"use client"` file. `src/styles.css` ships as `@yokinist/notion-rsc/styles.css`.
+- `examples`: blogs in Next.js, React Router and TanStack Start that read a sample Notion database. Each is self-contained so it can be copied out with giget; they read `.env.local` in their own folder, then `examples/.env.local`. CI typechecks them but does not build them.
 - `docs`: Fumadocs + Next.js, deployed on Vercel (root directory `docs`) at https://notion-kit-docs.vercel.app. The demo page renders `docs/lib/demo-blocks.ts`, so it needs no Notion token.
 
 ## Commands
@@ -15,6 +16,7 @@ npm run build       # packages first, then docs
 npm run typecheck   # docs needs the packages built
 npm test            # Vitest in each package
 npm run dev -w docs # docs and demo at localhost:3000
+npm run dev -w examples/next-blog # needs examples/.env.local
 ```
 
 ## Conventions

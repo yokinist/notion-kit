@@ -1,3 +1,10 @@
 {
-  "pages": ["index", "getting-started", "demo", "notion-fetch", "notion-rsc"]
+  "pages": [
+    "index",
+    "getting-started",
+    "examples",
+    "demo",
+    "notion-fetch",
+    "notion-rsc"
+  ]
 }

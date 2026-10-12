@@ -1,6 +1,6 @@
 # @yokinist/notion-fetch
 
-**[Documentation](https://notion-kit-docs.vercel.app/docs/notion-fetch)** · [Demo](https://notion-kit-docs.vercel.app/docs/demo)
+**[Documentation](https://notion-kit-docs.vercel.app/docs/notion-fetch)** · [Demo](https://notion-kit-docs.vercel.app/docs/demo) · [Examples](https://github.com/yokinist/notion-kit/tree/main/examples)
 
 Small helpers for building sites on the [official Notion API](https://developers.notion.com) (`@notionhq/client`):
 
