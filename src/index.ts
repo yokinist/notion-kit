@@ -1,5 +1,10 @@
 export { createDedupe } from "./dedupe";
 export {
+  createRequestLimiter,
+  type RequestLimiter,
+  type RequestLimiterOptions,
+} from "./limiter";
+export {
   getPropertyDate,
   getPropertyNames,
   getPropertyText,
