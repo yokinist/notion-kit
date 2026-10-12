@@ -18,7 +18,7 @@ export type NotionBlocksOptions = {
   /**
    * URL for a file uploaded to Notion. Notion's own URLs expire after an
    * hour, so point this at a route that redirects to a fresh one, e.g.
-   * createFileHandler from @yokinist/notion-kit.
+   * createFileHandler from @yokinist/notion-fetch.
    */
   fileUrl?: (blockId: string) => string;
   /** Passed to fetch for link previews and oEmbed, e.g. Next.js caching. */

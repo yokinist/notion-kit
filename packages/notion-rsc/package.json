@@ -6,7 +6,8 @@
   "author": "yokinist",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yokinist/notion-rsc.git"
+    "url": "git+https://github.com/yokinist/notion-kit.git",
+    "directory": "packages/notion-rsc"
   },
   "keywords": [
     "notion",
@@ -36,8 +37,7 @@
     "build": "vite build && tsc -p tsconfig.build.json && cp src/styles.css dist/styles.css",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
-    "lint": "biome check ."
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "@notionhq/client": ">=5",
@@ -58,7 +58,6 @@
     }
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.15",
     "@notionhq/client": "^5.27.0",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",

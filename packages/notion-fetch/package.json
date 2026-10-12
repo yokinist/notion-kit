@@ -1,12 +1,13 @@
 {
-  "name": "@yokinist/notion-kit",
+  "name": "@yokinist/notion-fetch",
   "version": "0.0.0",
   "description": "Rate-limit-safe Notion API helpers: block trees, database rows, and fresh URLs for uploaded files",
   "license": "MIT",
   "author": "yokinist",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yokinist/notion-kit.git"
+    "url": "git+https://github.com/yokinist/notion-kit.git",
+    "directory": "packages/notion-fetch"
   },
   "keywords": [
     "notion",
@@ -32,14 +33,12 @@
     "build": "vite build && tsc -p tsconfig.build.json",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
-    "lint": "biome check ."
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "@notionhq/client": ">=5"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.15",
     "@notionhq/client": "^5.27.0",
     "@types/node": "^24.19.2",
     "typescript": "^5.9.3",

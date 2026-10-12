@@ -1,0 +1,17 @@
+{
+  "name": "notion-kit",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "biome check ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15"
+  }
+}

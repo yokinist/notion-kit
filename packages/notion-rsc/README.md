@@ -26,11 +26,11 @@ Without `shiki`, code is shown as plain `<pre><code>`; without `katex`, equation
 
 ## Usage
 
-Fetch a page's blocks with their children, e.g. with [`@yokinist/notion-kit`](https://github.com/yokinist/notion-kit), and pass them to `<NotionBlocks>`:
+Fetch a page's blocks with their children, e.g. with [`@yokinist/notion-fetch`](https://github.com/yokinist/notion-kit/tree/main/packages/notion-fetch), and pass them to `<NotionBlocks>`:
 
 ```tsx
 import { Client } from "@notionhq/client";
-import { fetchBlockTree } from "@yokinist/notion-kit";
+import { fetchBlockTree } from "@yokinist/notion-fetch";
 import { NotionBlocks } from "@yokinist/notion-rsc";
 import "@yokinist/notion-rsc/styles.css";
 import "katex/dist/katex.min.css"; // if you use equations
@@ -72,12 +72,12 @@ export default async function Page({ params }) {
 
 ### Files uploaded to Notion
 
-Notion's URLs for uploaded files expire after an hour, which breaks images on statically generated or cached pages. Without `fileUrl`, those URLs are used as they are, which is fine for pages rendered on every request. For cached pages, point `fileUrl` at a route that redirects to a fresh URL, such as `createFileHandler` from `@yokinist/notion-kit`:
+Notion's URLs for uploaded files expire after an hour, which breaks images on statically generated or cached pages. Without `fileUrl`, those URLs are used as they are, which is fine for pages rendered on every request. For cached pages, point `fileUrl` at a route that redirects to a fresh URL, such as `createFileHandler` from `@yokinist/notion-fetch`:
 
 ```ts
 // Next.js: app/api/notion/file/[id]/route.ts
 import { Client } from "@notionhq/client";
-import { createFileHandler } from "@yokinist/notion-kit";
+import { createFileHandler } from "@yokinist/notion-fetch";
 
 export const GET = createFileHandler({
   notion: new Client({ auth: process.env.NOTION_TOKEN }),

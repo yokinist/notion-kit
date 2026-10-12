@@ -1,4 +1,4 @@
-# @yokinist/notion-kit
+# @yokinist/notion-fetch
 
 Small helpers for building sites on the [official Notion API](https://developers.notion.com) (`@notionhq/client`):
 
@@ -12,7 +12,7 @@ No React, no framework: everything is plain functions and a Web-standard `Reques
 ## Install
 
 ```bash
-npm install @yokinist/notion-kit @notionhq/client
+npm install @yokinist/notion-fetch @notionhq/client
 ```
 
 Create an [internal integration](https://www.notion.so/profile/integrations), and share your database with it (database page → **⋯ → Connections**).
@@ -27,7 +27,7 @@ import {
   getPropertyDate,
   getPropertyText,
   queryDatabase,
-} from "@yokinist/notion-kit";
+} from "@yokinist/notion-fetch";
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 const limit = createRequestLimiter(); // share one per process
@@ -49,7 +49,7 @@ Serve the handler at a route whose last path segment is the block ID, and point 
 ```ts
 // Next.js: app/api/notion/file/[id]/route.ts
 import { Client } from "@notionhq/client";
-import { createFileHandler } from "@yokinist/notion-kit";
+import { createFileHandler } from "@yokinist/notion-fetch";
 
 export const GET = createFileHandler({
   notion: new Client({ auth: process.env.NOTION_TOKEN }),
@@ -67,7 +67,7 @@ It works for image, video, audio, file and PDF blocks; external URLs are redirec
 When pages are generated in parallel, `createDedupe` lets them share one fetch of the same data:
 
 ```ts
-import { createDedupe } from "@yokinist/notion-kit";
+import { createDedupe } from "@yokinist/notion-fetch";
 
 const dedupe = createDedupe();
 const rows = await dedupe(`rows:${databaseId}`, () =>
