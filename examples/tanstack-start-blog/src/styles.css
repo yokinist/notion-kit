@@ -1,0 +1,120 @@
+@import "@yokinist/notion-rsc/styles.css";
+
+/* A small, readable stylesheet; swap in your site's own typography */
+:root {
+  color-scheme: light dark;
+  --text: #18181b;
+  --muted: #71717a;
+  --line: #e4e4e7;
+  --code: #f4f4f5;
+  --link: #1d4ed8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e4e4e7;
+    --muted: #a1a1aa;
+    --line: #27272a;
+    --code: #18181b;
+    --link: #93c5fd;
+  }
+}
+
+body {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  font:
+    17px / 1.8 system-ui,
+    sans-serif;
+  color: var(--text);
+}
+a {
+  color: var(--link);
+}
+header,
+footer {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+header a {
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+footer {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.3;
+}
+h1 {
+  margin: 2.5rem 0 0.25rem;
+}
+time {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+figure {
+  margin: 1.5rem 0;
+}
+figcaption {
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-align: center;
+}
+blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--line);
+  color: var(--muted);
+}
+:not(pre) > code {
+  padding: 0.1em 0.3em;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+  background: var(--code);
+}
+table {
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* The post list */
+.posts {
+  padding: 0;
+  list-style: none;
+}
+.posts li {
+  margin: 2rem 0;
+}
+.posts h2 {
+  margin: 0.25rem 0;
+  font-size: 1.25rem;
+}
+.posts h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+.posts p {
+  margin: 0;
+  color: var(--muted);
+}

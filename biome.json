@@ -1,9 +1,28 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
-  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-  "files": {
-    "includes": ["**", "!**/.next", "!**/.source", "!**/next-env.d.ts"]
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
   },
-  "linter": { "enabled": true, "rules": { "preset": "recommended" } },
-  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2 }
+  "files": {
+    "includes": [
+      "**",
+      "!**/.next",
+      "!**/.source",
+      "!**/next-env.d.ts",
+      "!**/routeTree.gen.ts"
+    ]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  }
 }

@@ -5,22 +5,35 @@ Small blogs built on a Notion database with `@yokinist/notion-fetch` and `@yokin
 | Example | Framework |
 | --- | --- |
 | [`next-blog`](next-blog) | Next.js (App Router) |
-| [`react-router-blog`](react-router-blog) | React Router (RSC Framework Mode, on Vite) |
+| [`react-router-blog`](react-router-blog) | React Router (RSC Framework Mode) |
+| [`tanstack-start-blog`](tanstack-start-blog) | TanStack Start (Server Components) |
 
-## Set up
+React Router's and TanStack Start's Server Components support is still experimental.
 
-1. **Copy the sample database.** Duplicate the [notion-kit examples](https://www.notion.so/2fb6f63f6f694939bf584be023f1712f) page into your workspace, or use any database with a `title`, a `slug` (text), a `date` and, optionally, `summary` and `tags`.
-2. **Create an integration** at https://www.notion.so/profile/integrations with only the **Read content** capability, and connect it to the page that holds the database (⋯ → Connections).
-3. **Add the token.** Copy `.env.example` to `.env.local` in this folder and fill in `NOTION_TOKEN` and `NOTION_DATABASE_ID`. Every example reads this one file.
+## The database and the token
 
-## Run
+1. **A database** with a `title`, a `slug` (text), a `date` and, optionally, `summary` (text) and `tags` (multi-select). The [notion-kit examples](https://www.notion.so/2fb6f63f6f694939bf584be023f1712f) database has sample posts.
+2. **An integration** from https://www.notion.so/profile/integrations with only the **Read content** capability, connected to the page that holds the database (⋯ → Connections).
+3. **`.env.local`** with `NOTION_TOKEN` and `NOTION_DATABASE_ID`; see `.env.example`.
 
-From the repository root:
+## Start your own blog from one
+
+Each example is a complete project. Copy one out and run it:
+
+```bash
+npx giget@latest gh:yokinist/notion-kit/examples/next-blog my-blog
+cd my-blog
+cp .env.example .env.local   # then fill it in
+npm install
+npm run dev
+```
+
+## Run them in this repository
+
+Put `.env.local` in this folder; every example reads it. Then, from the repository root:
 
 ```bash
 npm install
 npm run build -w packages
 npm run dev -w examples/next-blog
 ```
-
-Swap `next-blog` for another example's folder name to run that one.

@@ -11,8 +11,14 @@ React Router's RSC support is still marked unstable (`unstable_reactRouterRSC`).
 | `app/routes/post.tsx` | A post; links to other posts point to their pages here |
 | `app/routes/file.ts` | A resource route that redirects to fresh URLs of files uploaded to Notion |
 
-See [the examples README](..) to set up the database and token, then:
+## Start your own
 
 ```bash
-npm run dev -w examples/react-router-blog
+npx giget@latest gh:yokinist/notion-kit/examples/react-router-blog my-blog
+cd my-blog
+cp .env.example .env.local   # NOTION_TOKEN and NOTION_DATABASE_ID
+npm install
+npm run dev
 ```
+
+See [the examples README](..) for setting up the database and the integration.

@@ -8,12 +8,14 @@ import {
 } from "@yokinist/notion-fetch";
 import { cache } from "react";
 
-// The examples share one env file, examples/.env.local. In your own app,
-// use your framework's .env file or your host's environment variables.
-try {
-  process.loadEnvFile("../.env.local");
-} catch {
-  // Not there: use the environment as it is
+// Reads .env.local here, then the one the examples share inside the
+// notion-kit repo. Variables already set (e.g. by your host) win.
+for (const file of [".env.local", "../.env.local"]) {
+  try {
+    process.loadEnvFile(file);
+  } catch {
+    // No such file
+  }
 }
 
 export const notion = new Client({ auth: process.env.NOTION_TOKEN });
@@ -35,9 +37,7 @@ export type Post = {
 export const getPosts = cache(async (): Promise<Post[]> => {
   const databaseId = process.env.NOTION_DATABASE_ID;
   if (!process.env.NOTION_TOKEN || !databaseId) {
-    throw new Error(
-      "Set NOTION_TOKEN and NOTION_DATABASE_ID in examples/.env.local",
-    );
+    throw new Error("Set NOTION_TOKEN and NOTION_DATABASE_ID in .env.local");
   }
   const rows = await queryDatabase(notion, databaseId, { limit });
   return rows
