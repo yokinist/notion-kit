@@ -5,7 +5,8 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "typecheck": "next typegen && tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit",
+    "prebuild": "npm run build -w @yokinist/notion-rsc"
   },
   "dependencies": {
     "@yokinist/notion-rsc": "*",
