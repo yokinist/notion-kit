@@ -37,6 +37,13 @@ jobs:
               echo "$name@$version is already on npm"
               continue
             fi
-            (cd "$dir" && npm stage publish)
+            # npm view can lag right after a publish; the registry still refuses it
+            if ! out=$(cd "$dir" && npm stage publish 2>&1); then
+              echo "$out"
+              grep -q "previously published" <<< "$out" || exit 1
+              echo "$name@$version is already on npm"
+              continue
+            fi
+            echo "$out"
             echo "::notice::Staged $name@$version: approve it in Staged Packages on npmjs.com"
           done
