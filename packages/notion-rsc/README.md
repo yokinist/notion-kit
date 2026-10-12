@@ -20,6 +20,8 @@ It needs React 19 and nothing else: no Next.js dependency. It works in any RSC f
 npm install @yokinist/notion-rsc @notionhq/client
 ```
 
+Works with `@notionhq/client` 5.x (Notion API version 2025-09-03, with data sources). CI tests the oldest and newest 5.x releases, and checks each new release weekly.
+
 Shiki, KaTeX and react-tweet come with it.
 
 ## Usage

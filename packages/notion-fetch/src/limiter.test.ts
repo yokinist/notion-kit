@@ -19,8 +19,9 @@ const rateLimited = (retryAfter: string) =>
     headers: new Headers(),
     rawBodyText: "",
     additional_data: { retry_after: retryAfter },
+    // Newer clients also take request_id; the cast keeps 5.0 compiling too
     request_id: undefined,
-  });
+  } as ConstructorParameters<typeof APIResponseError>[0]);
 
 describe("createRequestLimiter", () => {
   beforeEach(() => {

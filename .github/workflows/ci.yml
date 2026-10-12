@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Weekly, to hear about new @notionhq/client releases before users do
+  schedule:
+    - cron: "0 0 * * 1"
 
 jobs:
   check:
@@ -20,3 +23,24 @@ jobs:
       - run: npm run build
       - run: npm run typecheck
       - run: npm test
+
+  # The packages accept @notionhq/client ^5.0.0: test the oldest and newest
+  # of that range, and the latest release, which may be a new major
+  notion-client:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        client: ["5.0.0", "5", "latest"]
+    # A new major failing is a heads-up to widen the range, not a broken build
+    continue-on-error: ${{ matrix.client == 'latest' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm install --no-save @notionhq/client@${{ matrix.client }} -w packages/notion-fetch -w packages/notion-rsc
+      - run: npm run typecheck -w packages/notion-fetch -w packages/notion-rsc
+      - run: npm test -w packages/notion-fetch -w packages/notion-rsc

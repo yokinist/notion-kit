@@ -36,7 +36,7 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@notionhq/client": ">=5"
+    "@notionhq/client": "^5.0.0"
   },
   "devDependencies": {
     "@notionhq/client": "^5.27.0",
