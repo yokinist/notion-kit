@@ -39,23 +39,14 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "katex": "^0.19.0",
+    "react-tweet": "^3.3.1",
+    "shiki": "^4.5.0"
+  },
   "peerDependencies": {
     "@notionhq/client": ">=5",
-    "katex": ">=0.16",
-    "react": ">=19",
-    "react-tweet": ">=3",
-    "shiki": ">=1"
-  },
-  "peerDependenciesMeta": {
-    "katex": {
-      "optional": true
-    },
-    "react-tweet": {
-      "optional": true
-    },
-    "shiki": {
-      "optional": true
-    }
+    "react": ">=19"
   },
   "devDependencies": {
     "@notionhq/client": "^5.27.0",
@@ -67,12 +58,9 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "happy-dom": "^21.0.1",
-    "katex": "^0.19.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "react-tweet": "^3.3.1",
     "rollup-plugin-preserve-directives": "^0.4.0",
-    "shiki": "^4.5.0",
     "typescript": "^5.9.3",
     "vite": "^8.3.4",
     "vitest": "^5.0.4"

@@ -57,6 +57,13 @@ const playerPreview = async (
   }
 };
 
+// Loaded only when a page has a post: react-tweet imports CSS modules,
+// which need a bundler
+const DefaultTweet = async ({ id }: { id: string }) => {
+  const { Tweet } = await import("react-tweet");
+  return <Tweet id={id} />;
+};
+
 const followRedirects = async (url: string, init: RequestInit) => {
   try {
     return (
@@ -66,20 +73,6 @@ const followRedirects = async (url: string, init: RequestInit) => {
   } catch {
     return url;
   }
-};
-
-const DefaultTweet = async ({
-  id,
-  url,
-  ctx,
-}: {
-  id: string;
-  url: string;
-  ctx: Context;
-}) => {
-  const reactTweet = await import("react-tweet").catch(() => undefined);
-  if (!reactTweet) return <Bookmark url={url} ctx={ctx} />;
-  return <reactTweet.Tweet id={id} />;
 };
 
 /** An embed or external video: a post on X, a player, or a link card. */
@@ -92,14 +85,10 @@ export const Embed = async ({ url, ctx }: { url: string; ctx: Context }) => {
   }
   switch (embed.kind) {
     case "tweet": {
-      const Tweet = ctx.components.Tweet;
+      const Tweet = ctx.components.Tweet ?? DefaultTweet;
       return (
         <div className="notion-tweet">
-          {Tweet ? (
-            <Tweet id={embed.id} />
-          ) : (
-            <DefaultTweet id={embed.id} url={url} ctx={ctx} />
-          )}
+          <Tweet id={embed.id} />
         </div>
       );
     }

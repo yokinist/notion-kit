@@ -1,5 +1,7 @@
+@import "katex/dist/katex.min.css";
+
 /*
- * Optional base styles for @yokinist/notion-rsc. The markup is semantic
+ * Base styles for @yokinist/notion-rsc, with KaTeX's. The markup is semantic
  * HTML (p, h2-h4, ul/ol, blockquote, figure, table, ...) that typography
  * styles such as Tailwind's `prose` already cover; these rules only style
  * the notion-* parts. Colors follow `color-scheme` / a `.dark` ancestor.

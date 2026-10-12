@@ -6,7 +6,7 @@ Render Notion pages with [React Server Components](https://react.dev/reference/r
 - **Code and math on the server.** Code blocks are highlighted with [Shiki](https://shiki.style) (light and dark themes), equations with [KaTeX](https://katex.org), both at render time.
 - **Embeds without third-party cookies.** Players show a preview from oEmbed and load the iframe only when clicked. Posts on X use [react-tweet](https://react-tweet.vercel.app). Bookmarks show the linked page's title and description.
 - **Fast first paint.** The lead image is loaded eagerly with `fetchpriority="high"`, the rest lazily.
-- **Bring your own styles.** Works with Tailwind's `prose` or any typography CSS; an optional stylesheet covers the Notion-specific parts.
+- **Bring your own styles.** Works with Tailwind's `prose` or any typography CSS; a stylesheet covers the Notion-specific parts.
 
 It needs React 19 and nothing else: no Next.js dependency. It works in any RSC framework (Next.js App Router, Waku, React Router, …) and with `react-dom/static` `prerender`.
 
@@ -18,11 +18,9 @@ It needs React 19 and nothing else: no Next.js dependency. It works in any RSC f
 
 ```bash
 npm install @yokinist/notion-rsc @notionhq/client
-# optional, enables each feature when installed
-npm install shiki katex react-tweet
 ```
 
-Without `shiki`, code is shown as plain `<pre><code>`; without `katex`, equations as their TeX source; without `react-tweet`, posts on X as bookmarks.
+Shiki, KaTeX and react-tweet come with it.
 
 ## Usage
 
@@ -33,7 +31,6 @@ import { Client } from "@notionhq/client";
 import { fetchBlockTree } from "@yokinist/notion-fetch";
 import { NotionBlocks } from "@yokinist/notion-rsc";
 import "@yokinist/notion-rsc/styles.css";
-import "katex/dist/katex.min.css"; // if you use equations
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
@@ -86,7 +83,7 @@ export const GET = createFileHandler({
 
 ## Styling
 
-The markup is the HTML you would write by hand, so typography styles such as Tailwind's [`prose`](https://github.com/tailwindlabs/tailwindcss-typography) cover most of it. `@yokinist/notion-rsc/styles.css` adds styles for the Notion-specific parts, all under `notion-*` classes:
+The markup is the HTML you would write by hand, so typography styles such as Tailwind's [`prose`](https://github.com/tailwindlabs/tailwindcss-typography) cover most of it. `@yokinist/notion-rsc/styles.css` adds styles for the Notion-specific parts, all under `notion-*` classes, and includes KaTeX's stylesheet:
 
 | Class | Block |
 | --- | --- |

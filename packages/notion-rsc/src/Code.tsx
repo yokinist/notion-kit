@@ -1,3 +1,5 @@
+import { codeToHtml } from "shiki";
+
 // Notion language names that Shiki spells differently
 const LANGUAGES: Record<string, string> = {
   "plain text": "text",
@@ -8,7 +10,6 @@ const LANGUAGES: Record<string, string> = {
 };
 
 const highlight = async (code: string, language: string) => {
-  const { codeToHtml } = await import("shiki");
   const options = {
     themes: { light: "github-light", dark: "github-dark" },
     defaultColor: false,
@@ -20,8 +21,8 @@ const highlight = async (code: string, language: string) => {
 };
 
 /**
- * A code block, highlighted at render time by Shiki (an optional peer
- * dependency) so no highlighter ships to the browser.
+ * A code block, highlighted at render time by Shiki so no highlighter ships
+ * to the browser.
  */
 export const Code = async ({
   code,
@@ -30,17 +31,7 @@ export const Code = async ({
   code: string;
   language: string;
 }) => {
-  const html = await highlight(code, language).catch(() => undefined);
-  if (html === undefined) {
-    // Same structure as Shiki's output, so one stylesheet fits both
-    return (
-      <div className="notion-code">
-        <pre>
-          <code>{code}</code>
-        </pre>
-      </div>
-    );
-  }
+  const html = await highlight(code, language);
   return (
     <div
       className="notion-code"

@@ -15,8 +15,6 @@ NOTION_TOKEN=ntn_...
 
 ```bash
 npm install @yokinist/notion-fetch @yokinist/notion-rsc @notionhq/client
-# optional: code highlighting, math and posts on X
-npm install shiki katex react-tweet
 ```
 
 ## 3. Render a page
@@ -52,7 +50,6 @@ export default async function Page({ params }: PageProps<"/[id]">) {
 
 ```tsx title="app/layout.tsx"
 import "@yokinist/notion-rsc/styles.css";
-import "katex/dist/katex.min.css";
 ```
 
 ## 4. Serve uploaded files

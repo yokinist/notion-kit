@@ -29,7 +29,7 @@ export type NotionBlocksOptions = {
   components?: {
     /** A link to a page on your site, e.g. next/link. Defaults to <a>. */
     Link?: ComponentType<{ href: string; children: ReactNode }>;
-    /** A post on X. Defaults to react-tweet's <Tweet> when installed. */
+    /** A post on X. Defaults to react-tweet's <Tweet>. */
     Tweet?: ComponentType<{ id: string }>;
   };
 };
