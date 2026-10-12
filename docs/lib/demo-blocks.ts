@@ -170,15 +170,18 @@ export default async function Page() {
       ),
     ),
   ),
+  b("heading_3", rich(t("YouTube"))),
   b("video", {
     type: "external",
     external: { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
     caption: [],
   }),
+  b("heading_3", rich(t("Spotify"))),
   b("embed", {
     url: "https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT",
     caption: [],
   }),
+  b("heading_3", rich(t("SoundCloud"))),
   b("embed", {
     url: "https://soundcloud.com/forss/flickermood",
     caption: [],

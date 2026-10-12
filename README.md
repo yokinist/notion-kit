@@ -19,4 +19,4 @@ npm run build
 
 ## License
 
-MIT
+MIT. Dependencies keep their own licenses; see [notion-rsc](packages/notion-rsc#third-party-software-and-trademarks) for third-party notes and trademarks.
