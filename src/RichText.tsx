@@ -1,5 +1,6 @@
 import type { RichTextItemResponse } from "@notionhq/client";
 import { Fragment } from "react";
+import { Equation } from "./Equation.js";
 import type { Context, RichText as RichTextValue } from "./types.js";
 
 const withLineBreaks = (text: string) =>
@@ -40,7 +41,12 @@ const Link = ({
 const Item = ({ item, ctx }: { item: RichTextItemResponse; ctx: Context }) => {
   const { bold, italic, strikethrough, underline, code, color } =
     item.annotations;
-  let node: React.ReactNode = withLineBreaks(item.plain_text);
+  let node: React.ReactNode =
+    item.type === "equation" ? (
+      <Equation expression={item.equation.expression} />
+    ) : (
+      withLineBreaks(item.plain_text)
+    );
   if (code) node = <code>{node}</code>;
   if (bold) node = <strong>{node}</strong>;
   if (italic) node = <em>{node}</em>;

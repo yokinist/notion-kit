@@ -1,3 +1,5 @@
+import { Code } from "./Code.js";
+import { Equation } from "./Equation.js";
 import { RichText } from "./RichText.js";
 import type {
   Context,
@@ -251,6 +253,15 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
         </p>
       );
     }
+    case "code":
+      return (
+        <Code
+          code={plain(block.code.rich_text)}
+          language={block.code.language}
+        />
+      );
+    case "equation":
+      return <Equation expression={block.equation.expression} block />;
     default:
       return null;
   }
