@@ -1,0 +1,105 @@
+import { Bookmark } from "./Bookmark.js";
+import { EmbedFacade } from "./EmbedFacade.js";
+import { toEmbed } from "./embeds.js";
+import { getLinkPreview, type LinkPreview } from "./linkPreview.js";
+import type { Context } from "./types.js";
+
+// Players' oEmbed endpoints give cleaner titles than page metadata, and
+// YouTube serves scrapers a consent page instead
+const OEMBED: Record<string, string> = {
+  YouTube: "https://www.youtube.com/oembed?format=json&url=",
+  SoundCloud: "https://soundcloud.com/oembed?format=json&url=",
+  Spotify: "https://open.spotify.com/oembed?url=",
+};
+
+const playerPreview = async (
+  provider: string,
+  url: string,
+  init: RequestInit,
+): Promise<LinkPreview> => {
+  const endpoint = OEMBED[provider];
+  if (!endpoint) return getLinkPreview(url, init);
+  try {
+    const response = await fetch(endpoint + encodeURIComponent(url), {
+      signal: AbortSignal.timeout(10_000),
+      ...init,
+    });
+    if (!response.ok) return {};
+    const data = (await response.json()) as {
+      title?: string;
+      thumbnail_url?: string;
+    };
+    return { title: data.title, image: data.thumbnail_url };
+  } catch {
+    // Private tracks have no oEmbed; their pages only have generic metadata
+    return {};
+  }
+};
+
+const followRedirects = async (url: string, init: RequestInit) => {
+  try {
+    return (
+      (await fetch(url, { signal: AbortSignal.timeout(10_000), ...init }))
+        .url || url
+    );
+  } catch {
+    return url;
+  }
+};
+
+const DefaultTweet = async ({
+  id,
+  url,
+  ctx,
+}: {
+  id: string;
+  url: string;
+  ctx: Context;
+}) => {
+  const reactTweet = await import("react-tweet").catch(() => undefined);
+  if (!reactTweet) return <Bookmark url={url} ctx={ctx} />;
+  return <reactTweet.Tweet id={id} />;
+};
+
+/** An embed or external video: a post on X, a player, or a link card. */
+export const Embed = async ({ url, ctx }: { url: string; ctx: Context }) => {
+  let pageUrl = url;
+  let embed = toEmbed(url);
+  if (embed.kind === "redirect") {
+    pageUrl = await followRedirects(url, ctx.fetchInit);
+    embed = toEmbed(pageUrl);
+  }
+  switch (embed.kind) {
+    case "tweet": {
+      const Tweet = ctx.components.Tweet;
+      return (
+        <div className="notion-tweet">
+          {Tweet ? (
+            <Tweet id={embed.id} />
+          ) : (
+            <DefaultTweet id={embed.id} url={url} ctx={ctx} />
+          )}
+        </div>
+      );
+    }
+    case "player": {
+      const { title, image } = await playerPreview(
+        embed.provider,
+        pageUrl,
+        ctx.fetchInit,
+      );
+      return (
+        <EmbedFacade
+          src={embed.src}
+          provider={embed.provider}
+          height={embed.height}
+          title={title}
+          image={image}
+          playLabel={ctx.labels.play}
+        />
+      );
+    }
+    default:
+      return <Bookmark url={url} ctx={ctx} />;
+  }
+};

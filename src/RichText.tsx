@@ -12,6 +12,24 @@ const withLineBreaks = (text: string) =>
     </Fragment>
   ));
 
+/** A link to a page on your site, through components.Link if given. */
+export const InternalLink = ({
+  href,
+  ctx,
+  children,
+}: {
+  href: string;
+  ctx: Context;
+  children: React.ReactNode;
+}) => {
+  const Link = ctx.components.Link;
+  return Link ? (
+    <Link href={href}>{children}</Link>
+  ) : (
+    <a href={href}>{children}</a>
+  );
+};
+
 // Links to other Notion pages come as "/<page id>"
 const notionPageId = (href: string) => href.match(/^\/([\da-f]{32})/)?.[1];
 
@@ -26,7 +44,12 @@ const Link = ({
 }) => {
   const pageId = notionPageId(href);
   const path = pageId && ctx.pageUrl(pageId);
-  if (path) return <a href={path}>{children}</a>;
+  if (path)
+    return (
+      <InternalLink href={path} ctx={ctx}>
+        {children}
+      </InternalLink>
+    );
   return (
     <a
       href={pageId ? `https://www.notion.so/${pageId}` : href}

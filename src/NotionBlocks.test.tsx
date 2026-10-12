@@ -97,4 +97,39 @@ describe("NotionBlocks", () => {
       `https://www.notion.so/${unknown}`,
     );
   });
+
+  it("renders links to pages on your site with components.Link", async () => {
+    const page = "0123456789abcdef0123456789abcdef";
+    const dom = await renderToDom(
+      <NotionBlocks
+        blocks={[
+          block("paragraph", {
+            rich_text: [
+              text("about", { href: `/${page}` }),
+              text("site", { href: "https://example.com" }),
+            ],
+          }),
+          block("child_page", { title: "Child" }, { id: page }),
+        ]}
+        pageUrl={() => "/about"}
+        components={{
+          Link: ({ href, children }) => (
+            <a href={href} data-client-link="">
+              {children}
+            </a>
+          ),
+        }}
+      />,
+    );
+
+    const clientLinks = [...dom.querySelectorAll("[data-client-link]")].map(
+      (a) => a.textContent,
+    );
+    expect(clientLinks).toEqual(["about", "Child"]);
+    expect(
+      dom
+        .querySelector('a[href="https://example.com"]')
+        ?.hasAttribute("data-client-link"),
+    ).toBe(false);
+  });
 });

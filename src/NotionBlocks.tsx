@@ -1,6 +1,8 @@
+import { Bookmark } from "./Bookmark.js";
 import { Code } from "./Code.js";
+import { Embed } from "./Embed.js";
 import { Equation } from "./Equation.js";
-import { RichText } from "./RichText.js";
+import { InternalLink, RichText } from "./RichText.js";
 import type {
   Context,
   Heading,
@@ -183,7 +185,9 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
           : undefined;
       return path ? (
         <p>
-          <a href={path}>{path}</a>
+          <InternalLink href={path} ctx={ctx}>
+            {path}
+          </InternalLink>
         </p>
       ) : null;
     }
@@ -191,7 +195,9 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
       const path = ctx.pageUrl(notionId(block.id));
       return path ? (
         <p>
-          <a href={path}>{block.child_page.title}</a>
+          <InternalLink href={path} ctx={ctx}>
+            {block.child_page.title}
+          </InternalLink>
         </p>
       ) : null;
     }
@@ -216,7 +222,6 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
       );
     }
     case "video":
-      // External videos (YouTube, ...) are embeds
       return block.video.type === "file" ? (
         // biome-ignore lint/a11y/useMediaCaption: Notion has no captions track
         <video
@@ -224,7 +229,9 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
           preload="metadata"
           src={mediaUrl(block.id, block.video, ctx)}
         />
-      ) : null;
+      ) : (
+        <Embed url={block.video.external.url} ctx={ctx} />
+      );
     case "audio":
       return (
         // biome-ignore lint/a11y/useMediaCaption: Notion has no captions track
@@ -262,6 +269,12 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
       );
     case "equation":
       return <Equation expression={block.equation.expression} block />;
+    case "bookmark":
+      return <Bookmark url={block.bookmark.url} ctx={ctx} />;
+    case "link_preview":
+      return <Bookmark url={block.link_preview.url} ctx={ctx} />;
+    case "embed":
+      return <Embed url={block.embed.url} ctx={ctx} />;
     default:
       return null;
   }
@@ -330,12 +343,18 @@ export const NotionBlocks = ({
   blocks,
   pageUrl = () => undefined,
   fileUrl,
+  fetchInit = {},
+  labels = {},
+  components = {},
 }: NotionBlocksProps) => {
   // Without a fileUrl, fall back to Notion's own (expiring) URLs
   const ownUrls = fileUrl ? {} : uploadedUrls(blocks);
   const ctx: Context = {
     pageUrl,
     fileUrl: fileUrl ?? ((id) => ownUrls[id] ?? ""),
+    fetchInit,
+    labels: { play: labels.play ?? "Play" },
+    components,
     headings: headingsOf(blocks),
     leadImageId: blocks.slice(0, 3).find((block) => block.type === "image")?.id,
   };
