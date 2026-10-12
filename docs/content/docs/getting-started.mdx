@@ -1,0 +1,73 @@
+---
+title: Getting started
+description: Render a Notion page in a Next.js App Router project.
+---
+
+## 1. Create an integration
+
+Create an [internal integration](https://www.notion.so/profile/integrations) and copy its token. Then share your page or database with it: open it in Notion, **⋯ → Connections**, and add the integration.
+
+```bash title=".env.local"
+NOTION_TOKEN=ntn_...
+```
+
+## 2. Install
+
+```bash
+npm install @yokinist/notion-fetch @yokinist/notion-rsc @notionhq/client
+# optional: code highlighting, math and posts on X
+npm install shiki katex react-tweet
+```
+
+## 3. Render a page
+
+```tsx title="app/notion.ts"
+import { Client } from "@notionhq/client";
+import { createRequestLimiter } from "@yokinist/notion-fetch";
+
+export const notion = new Client({ auth: process.env.NOTION_TOKEN });
+export const limit = createRequestLimiter();
+```
+
+```tsx title="app/[id]/page.tsx"
+import { fetchBlockTree } from "@yokinist/notion-fetch";
+import { NotionBlocks } from "@yokinist/notion-rsc";
+import { limit, notion } from "../notion";
+
+export const revalidate = 60;
+
+export default async function Page({ params }: PageProps<"/[id]">) {
+  const { id } = await params;
+  const blocks = await fetchBlockTree(notion, id, { limit });
+  return (
+    <article className="prose">
+      <NotionBlocks
+        blocks={blocks}
+        fileUrl={(blockId) => `/api/notion/file/${blockId}`}
+      />
+    </article>
+  );
+}
+```
+
+```tsx title="app/layout.tsx"
+import "@yokinist/notion-rsc/styles.css";
+import "katex/dist/katex.min.css";
+```
+
+## 4. Serve uploaded files
+
+Notion's URLs for uploaded files expire after an hour. Add a route that redirects to a fresh one, so cached pages keep their images:
+
+```ts title="app/api/notion/file/[id]/route.ts"
+import { createFileHandler } from "@yokinist/notion-fetch";
+import { limit, notion } from "../../../../notion";
+
+export const GET = createFileHandler({ notion, limit });
+```
+
+That's it. See the [demo](/docs/demo) for what each block looks like.
+
+<Callout title="Not using Next.js?">
+  notion-rsc needs only React 19 Server Components, so it works in Waku, React Router and other RSC frameworks, or with `prerender` from `react-dom/static`. `createFileHandler` takes a Web-standard `Request` and returns a `Response`, so it works with Hono, Cloudflare Workers and the like.
+</Callout>

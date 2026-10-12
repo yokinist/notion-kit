@@ -1,0 +1,34 @@
+---
+title: Introduction
+description: Build sites on the official Notion API, rendered with React Server Components.
+---
+
+notion-kit is two small packages for using Notion as the place you write, and your own site as the place you publish.
+
+<Cards>
+  <Card title="@yokinist/notion-fetch" href="/docs/notion-fetch">
+    Fetch pages and database rows without hitting rate limits, and serve uploaded files from URLs that do not expire. No framework needed.
+  </Card>
+  <Card title="@yokinist/notion-rsc" href="/docs/notion-rsc">
+    Render Notion blocks to HTML on the server, with Shiki, KaTeX and click-to-load embeds. Needs only React 19.
+  </Card>
+</Cards>
+
+## Why
+
+- **Official API.** Both packages work with an integration token and `@notionhq/client`, so they do not break when Notion changes its private API.
+- **No client JavaScript for content.** Pages render to plain, semantic HTML on the server. Code highlighting and math happen at render time, so Shiki and KaTeX stay out of your bundle.
+- **Static pages that keep working.** Files uploaded to Notion get URLs that expire after an hour. notion-fetch serves them from a route that redirects to a fresh URL, so cached and statically generated pages keep their images.
+- **No third-party cookies.** YouTube, Spotify and SoundCloud players show a preview and load only when clicked.
+
+## Compared with react-notion-x
+
+[react-notion-x](https://github.com/NotionX/react-notion-x) renders data from Notion's unofficial API and runs as client components. It also renders database views, which notion-kit does not.
+
+|  | notion-kit | react-notion-x |
+| --- | --- | --- |
+| Notion API | Official, with an integration token | Unofficial |
+| Renders on | The server (RSC) | The client |
+| Client JavaScript for content | Only click-to-load players | The renderer, plus Shiki / KaTeX if used |
+| Database views | No | Yes |
+| Framework | Any RSC framework | Any React app |
