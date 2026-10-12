@@ -1,0 +1,27 @@
+import {
+  type Client,
+  collectPaginatedAPI,
+  isFullPage,
+  type PageObjectResponse,
+} from "@notionhq/client";
+import type { FetchOptions } from "./blocks";
+
+/** Fetches every row of a database (its first data source). */
+export const queryDatabase = async (
+  notion: Client,
+  databaseId: string,
+  { limit = (send) => send() }: FetchOptions = {},
+): Promise<PageObjectResponse[]> => {
+  const database = await limit(() =>
+    notion.databases.retrieve({ database_id: databaseId }),
+  );
+  const dataSourceId =
+    "data_sources" in database ? database.data_sources[0]?.id : undefined;
+  if (!dataSourceId) throw new Error(`${databaseId} has no data source`);
+  const rows = await limit(() =>
+    collectPaginatedAPI(notion.dataSources.query, {
+      data_source_id: dataSourceId,
+    }),
+  );
+  return rows.filter(isFullPage);
+};
