@@ -155,7 +155,13 @@ audio {
   line-height: 1.5;
   color: var(--notion-muted);
 }
+/* Room for the image when the page has no description */
+.notion-bookmark:has(> .notion-bookmark-image) {
+  min-height: 7rem;
+}
 .notion-bookmark-image {
+  /* Cropped to the card's height, which the text sets, not the image */
+  contain: size;
   /* Open Graph images are 1.91:1; wide cards show them nearly whole */
   width: min(15rem, 40%);
   margin: 0;

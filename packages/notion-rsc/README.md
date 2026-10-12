@@ -102,7 +102,7 @@ The markup is the HTML you would write by hand, so typography styles such as Tai
 | `notion-embed` | embed player |
 | `notion-color-*` | text colors, e.g. `notion-color-red`, `notion-color-red-background` |
 
-Dark mode follows `prefers-color-scheme`, or a `.dark` class on an ancestor. The stylesheet also switches Shiki's `--shiki-light` / `--shiki-dark` colors the same way.
+Dark mode follows a `.dark` class on an ancestor, or `prefers-color-scheme` when there is none. If your site switches themes with a class and ignores the OS setting, also put `.light` on `<html>` in light mode, so dark-mode users of your light theme get light cards. The stylesheet also switches Shiki's `--shiki-light` / `--shiki-dark` colors the same way.
 
 ## Supported blocks
 

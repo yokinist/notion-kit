@@ -45,4 +45,20 @@ describe("EmbedFacade", () => {
       "https://www.youtube-nocookie.com/embed/abc?autoplay=1",
     );
   });
+
+  it("keeps album and playlist cards as compact as a track's", () => {
+    render(
+      <EmbedFacade
+        src="https://open.spotify.com/embed/playlist/9x"
+        provider="Spotify"
+        height={352}
+        title="Mon. 7:19"
+        playLabel="Play"
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "Play: Mon. 7:19" }).style.height,
+    ).toBe("152px");
+  });
 });

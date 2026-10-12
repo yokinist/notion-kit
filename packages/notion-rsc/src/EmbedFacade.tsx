@@ -50,6 +50,9 @@ const SoundCloudLogo = () => (
   </span>
 );
 
+// The height of Spotify's player for a track
+const SPOTIFY_CARD_HEIGHT = 152;
+
 // Decorative bars in the place of SoundCloud's waveform
 const BARS = Array.from(
   { length: 56 },
@@ -118,7 +121,10 @@ export const EmbedFacade = ({
         </span>
       </>,
       {
-        height,
+        // Albums and playlists play in a 352px player, but a card that tall
+        // is mostly empty. The page grows when it is clicked, which is fine:
+        // the reader asked for it (and CLS ignores shifts right after input).
+        height: SPOTIFY_CARD_HEIGHT,
         // Tints the card with the artwork, as Spotify's player does
         ...(image && {
           "--notion-embed-artwork": `url(${JSON.stringify(image)})`,
