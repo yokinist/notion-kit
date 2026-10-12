@@ -1,0 +1,210 @@
+/*
+ * Optional base styles for @yokinist/notion-rsc. The markup is semantic
+ * HTML (p, h2-h4, ul/ol, blockquote, figure, table, ...) that typography
+ * styles such as Tailwind's `prose` already cover; these rules only style
+ * the notion-* parts. Colors follow `color-scheme` / a `.dark` ancestor.
+ */
+.notion-callout,
+.notion-bookmark,
+.notion-embed {
+  --notion-border: #e4e4e7;
+  --notion-muted: #71717a;
+  border: 1px solid var(--notion-border);
+  border-radius: 0.75rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) :is(.notion-callout, .notion-bookmark, .notion-embed) {
+    --notion-border: #27272a;
+    --notion-muted: #a1a1aa;
+  }
+}
+.dark :is(.notion-callout, .notion-bookmark, .notion-embed) {
+  --notion-border: #27272a;
+  --notion-muted: #a1a1aa;
+}
+
+.notion-callout {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+}
+.notion-callout-content > :first-child {
+  margin-top: 0;
+}
+
+.notion-to-do {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.notion-columns {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
+  .notion-columns {
+    grid-auto-flow: column;
+  }
+}
+
+.notion-table {
+  overflow-x: auto;
+}
+.notion-table th[scope="row"] {
+  white-space: nowrap;
+}
+
+.notion-table-of-contents ul {
+  list-style: none;
+  padding: 0;
+}
+.notion-table-of-contents [data-level="2"] {
+  padding-left: 1rem;
+}
+.notion-table-of-contents [data-level="3"] {
+  padding-left: 2rem;
+}
+
+figure img,
+video {
+  max-width: 100%;
+  border-radius: 0.5rem;
+}
+audio {
+  width: 100%;
+}
+
+.notion-code pre {
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+/* Shiki writes both themes as CSS variables */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) :is(.shiki, .shiki span) {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg);
+  }
+}
+.dark :is(.shiki, .shiki span) {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
+
+.notion-equation {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.notion-bookmark {
+  display: block;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+.notion-bookmark-title,
+.notion-bookmark-description,
+.notion-bookmark-host {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.notion-bookmark-title {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.notion-bookmark-description,
+.notion-bookmark-host {
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: var(--notion-muted);
+}
+
+.notion-embed {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 0.75rem;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  cursor: pointer;
+}
+.notion-embed-image {
+  width: 4rem;
+  height: 4rem;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+  object-fit: cover;
+}
+.notion-embed-text {
+  min-width: 0;
+  flex: 1;
+}
+.notion-embed-provider {
+  display: block;
+  font-size: 0.75em;
+  color: var(--notion-muted);
+}
+.notion-embed-title {
+  display: block;
+  font-weight: 600;
+}
+.notion-embed-play {
+  flex-shrink: 0;
+  border: 1px solid var(--notion-border);
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75em;
+}
+.notion-embed-player {
+  width: 100%;
+  margin: 1.5rem 0;
+  border: 0;
+  border-radius: 0.75rem;
+}
+
+.notion-tweet {
+  display: flex;
+  justify-content: center;
+}
+
+.notion-color-gray {
+  color: #71717a;
+}
+.notion-color-brown {
+  color: #92400e;
+}
+.notion-color-orange {
+  color: #ea580c;
+}
+.notion-color-yellow {
+  color: #ca8a04;
+}
+.notion-color-green {
+  color: #16a34a;
+}
+.notion-color-blue {
+  color: #2563eb;
+}
+.notion-color-purple {
+  color: #9333ea;
+}
+.notion-color-pink {
+  color: #db2777;
+}
+.notion-color-red {
+  color: #dc2626;
+}
