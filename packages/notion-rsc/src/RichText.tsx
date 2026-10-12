@@ -30,19 +30,36 @@ export const InternalLink = ({
   );
 };
 
-// Links to other Notion pages come as "/<page id>"
-const notionPageId = (href: string) => href.match(/^\/([\da-f]{32})/)?.[1];
+const NOTION_HOST = /(^|\.)notion\.(so|site|com)$/;
+
+// The page a link points to: a page mention carries its ID, and links to
+// Notion pages come as "/<id>" or as a notion.so / app.notion.com URL
+const notionPageId = (item: RichTextItemResponse, href: string) => {
+  if (item.type === "mention" && item.mention.type === "page") {
+    return item.mention.page.id.replaceAll("-", "");
+  }
+  const relative = href.match(/^\/([\da-f]{32})/)?.[1];
+  if (relative) return relative;
+  try {
+    const url = new URL(href);
+    if (!NOTION_HOST.test(url.hostname)) return undefined;
+    return url.pathname.match(/([\da-f]{32})$/)?.[1];
+  } catch {
+    return undefined;
+  }
+};
 
 const Link = ({
   href,
+  pageId,
   ctx,
   children,
 }: {
   href: string;
+  pageId: string | undefined;
   ctx: Context;
   children: React.ReactNode;
 }) => {
-  const pageId = notionPageId(href);
   const path = pageId && ctx.pageUrl(pageId);
   if (path)
     return (
@@ -52,7 +69,11 @@ const Link = ({
     );
   return (
     <a
-      href={pageId ? `https://www.notion.so/${pageId}` : href}
+      href={
+        href.startsWith("/") && pageId
+          ? `https://www.notion.so/${pageId}`
+          : href
+      }
       target="_blank"
       rel="noreferrer noopener"
     >
@@ -83,7 +104,7 @@ const Item = ({ item, ctx }: { item: RichTextItemResponse; ctx: Context }) => {
   }
   if (item.href) {
     node = (
-      <Link href={item.href} ctx={ctx}>
+      <Link href={item.href} pageId={notionPageId(item, item.href)} ctx={ctx}>
         {node}
       </Link>
     );

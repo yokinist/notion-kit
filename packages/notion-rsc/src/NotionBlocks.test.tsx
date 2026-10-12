@@ -98,6 +98,47 @@ describe("NotionBlocks", () => {
     );
   });
 
+  it("maps page mentions and full Notion URLs with pageUrl", async () => {
+    const mentioned = "eae5818e-e504-4a97-bd49-4f2673d4b1a9";
+    const linked = "0123456789abcdef0123456789abcdef";
+    const dom = await renderToDom(
+      <NotionBlocks
+        blocks={[
+          block("paragraph", {
+            rich_text: [
+              {
+                ...text("Code and math", {
+                  href: "https://app.notion.com/p/eae5818ee5044a97bd494f2673d4b1a9",
+                }),
+                type: "mention",
+                mention: { type: "page", page: { id: mentioned } },
+              },
+              text("linked", {
+                href: `https://www.notion.so/workspace/Some-page-${linked}?pvs=4`,
+              }),
+              text("elsewhere", { href: "https://example.com/p/abc" }),
+            ],
+          }),
+        ]}
+        pageUrl={(id) =>
+          ({
+            eae5818ee5044a97bd494f2673d4b1a9: "/posts/code-and-math",
+            [linked]: "/posts/linked",
+          })[id]
+        }
+      />,
+    );
+
+    const hrefs = [...dom.querySelectorAll("a")].map((a) =>
+      a.getAttribute("href"),
+    );
+    expect(hrefs).toEqual([
+      "/posts/code-and-math",
+      "/posts/linked",
+      "https://example.com/p/abc",
+    ]);
+  });
+
   it("renders links to pages on your site with components.Link", async () => {
     const page = "0123456789abcdef0123456789abcdef";
     const dom = await renderToDom(
