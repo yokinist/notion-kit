@@ -14,7 +14,7 @@ It needs React 19 and nothing else: no Next.js dependency. It works in any RSC f
 
 ## Compared with react-notion-x
 
-[react-notion-x](https://github.com/NotionX/react-notion-x) renders the data from Notion's unofficial, private API and runs as client components. This package renders the official API's block objects (`@notionhq/client`), so it works with an integration token and does not break when Notion changes its private API. Rendering on the server means no renderer, Shiki or KaTeX in your JavaScript bundle. In exchange, it covers page content only: no database views (Notion's collection views).
+[react-notion-x](https://github.com/NotionX/react-notion-x) renders data from Notion's private API with components that hydrate in the browser, in Notion's own look. This package renders the official API's block objects (`@notionhq/client`) with Server Components, so it works with an integration token, does not break when Notion changes its private API, and keeps the renderer, Shiki and KaTeX out of your JavaScript bundle; the HTML takes your site's typography. In exchange, it covers page content only: the official API does not expose database views. See the [full comparison](https://notion-kit-docs.vercel.app/docs#compared-with-react-notion-x).
 
 ## Install
 

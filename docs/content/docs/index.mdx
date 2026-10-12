@@ -23,12 +23,17 @@ notion-kit is two small packages for using Notion as the place you write, and yo
 
 ## Compared with react-notion-x
 
-[react-notion-x](https://github.com/NotionX/react-notion-x) renders data from Notion's unofficial API and runs as client components. It also renders database views, which notion-kit does not.
+[react-notion-x](https://github.com/NotionX/react-notion-x) is the mature, widely used choice, and the two aim at different things.
+
+- **Where the data comes from.** react-notion-x reads Notion's private API, the one the Notion app itself uses. That data includes database view settings, so it can render tables, galleries and boards, and it can render public pages without an integration; the trade-off is that the private API can change without notice. notion-kit uses the official API, which is documented and stable but does not expose views, so database views are out of reach.
+- **Where the code runs.** react-notion-x components render on the server and then hydrate in the browser, so they work in any React app. notion-rsc is made of Server Components that never reach the browser, so it needs an RSC framework.
+- **How pages look.** react-notion-x reproduces Notion's own look. notion-rsc outputs plain HTML for your site's typography to style, so posts look like the rest of your site.
 
 |  | notion-kit | react-notion-x |
 | --- | --- | --- |
-| Notion API | Official, with an integration token | Unofficial |
-| Renders on | The server (RSC) | The client |
-| Client JavaScript for content | Only click-to-load players | The renderer, plus Shiki / KaTeX if used |
-| Database views | No | Yes |
-| Framework | Any RSC framework | Any React app |
+| Notion API | Official, with an integration token | Private; official API data only through the `notion-compat` layer |
+| Rendering | Server Components, no hydration | Server-side rendering, then hydration |
+| JavaScript for content | Only click-to-load players and parts of posts on X | The renderer (about 31 kB gzipped), plus Prism, KaTeX, react-pdf and others when used |
+| Look | Your site's typography | Notion's |
+| Database views | No | Table, gallery, board and list |
+| Framework | React 19 Server Components (Next.js App Router, Waku, …) | Any React app |
