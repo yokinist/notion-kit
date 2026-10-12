@@ -1,6 +1,7 @@
 import { createGetUrl } from "fumadocs-core/source";
 
 export const appName = "notion-kit";
+export const siteUrl = "https://notion-kit-docs.vercel.app";
 export const docsRoute = "/docs";
 export const docsImageRoute = "/og/docs";
 export const docsContentRoute = "/llms.mdx/docs";
