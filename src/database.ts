@@ -4,7 +4,7 @@ import {
   isFullPage,
   type PageObjectResponse,
 } from "@notionhq/client";
-import type { FetchOptions } from "./blocks";
+import type { FetchOptions } from "./blocks.js";
 
 /** Fetches every row of a database (its first data source). */
 export const queryDatabase = async (

@@ -1,6 +1,6 @@
 import type { Client } from "@notionhq/client";
 import { describe, expect, it } from "vitest";
-import { createRequestLimiter, fetchBlockTree } from "./index";
+import { createRequestLimiter, fetchBlockTree } from "./index.js";
 
 type FakeBlock = { id: string; type: string; has_children?: boolean };
 

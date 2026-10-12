@@ -4,7 +4,7 @@ import {
   collectPaginatedAPI,
   isFullBlock,
 } from "@notionhq/client";
-import type { RequestLimiter } from "./limiter";
+import type { RequestLimiter } from "./limiter.js";
 
 /** A block with its nested blocks (list items, toggles, columns, ...). */
 export type NotionBlock = BlockObjectResponse & { children?: NotionBlock[] };

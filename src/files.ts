@@ -1,5 +1,5 @@
 import type { Client } from "@notionhq/client";
-import type { RequestLimiter } from "./limiter";
+import type { RequestLimiter } from "./limiter.js";
 
 export type FileHandlerOptions = {
   notion: Client;

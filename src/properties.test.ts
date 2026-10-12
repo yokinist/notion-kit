@@ -1,6 +1,6 @@
 import type { PageObjectResponse } from "@notionhq/client";
 import { describe, expect, it } from "vitest";
-import { getPropertyDate, getPropertyNames, getPropertyText } from "./index";
+import { getPropertyDate, getPropertyNames, getPropertyText } from "./index.js";
 
 type Property = PageObjectResponse["properties"][string];
 const property = (value: object) => value as Property;

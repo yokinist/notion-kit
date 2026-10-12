@@ -1,6 +1,6 @@
 import type { Client } from "@notionhq/client";
 import { describe, expect, it } from "vitest";
-import { queryDatabase } from "./index";
+import { queryDatabase } from "./index.js";
 
 const page = (id: string) => ({
   object: "page",

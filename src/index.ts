@@ -1,15 +1,19 @@
-export { type FetchOptions, fetchBlockTree, type NotionBlock } from "./blocks";
-export { queryDatabase } from "./database";
-export { createDedupe } from "./dedupe";
-export { createFileHandler, type FileHandlerOptions } from "./files";
+export {
+  type FetchOptions,
+  fetchBlockTree,
+  type NotionBlock,
+} from "./blocks.js";
+export { queryDatabase } from "./database.js";
+export { createDedupe } from "./dedupe.js";
+export { createFileHandler, type FileHandlerOptions } from "./files.js";
 export {
   createRequestLimiter,
   type RequestLimiter,
   type RequestLimiterOptions,
-} from "./limiter";
+} from "./limiter.js";
 export {
   getPropertyDate,
   getPropertyNames,
   getPropertyText,
   type PageProperty,
-} from "./properties";
+} from "./properties.js";

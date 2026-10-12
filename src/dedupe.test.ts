@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createDedupe } from "./index";
+import { createDedupe } from "./index.js";
 
 describe("createDedupe", () => {
   it("shares one in-flight fetch between callers of the same key", async () => {

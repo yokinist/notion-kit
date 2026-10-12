@@ -1,6 +1,6 @@
 import type { Client } from "@notionhq/client";
 import { describe, expect, it, vi } from "vitest";
-import { createFileHandler } from "./index";
+import { createFileHandler } from "./index.js";
 
 const ID = "9a3fab18-6b4a-44f8-8228-34ce66a4fc88";
 

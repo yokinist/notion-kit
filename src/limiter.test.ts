@@ -1,6 +1,6 @@
 import { APIResponseError, RequestTimeoutError } from "@notionhq/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createRequestLimiter } from "./index";
+import { createRequestLimiter } from "./index.js";
 
 // A request that stays pending until the test lets it finish
 const deferred = <T>() => {
