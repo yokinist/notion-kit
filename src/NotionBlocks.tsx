@@ -11,6 +11,13 @@ const plain = (text: { plain_text: string }[]) =>
 
 const notionId = (id: string) => id.replaceAll("-", "");
 
+type Media =
+  | { type: "file"; file: { url: string } }
+  | { type: "external"; external: { url: string } };
+
+const mediaUrl = (blockId: string, media: Media, ctx: Context) =>
+  media.type === "external" ? media.external.url : ctx.fileUrl(blockId);
+
 type Group =
   | { kind: "block"; block: NotionBlock }
   | { kind: "list"; ordered: boolean; items: NotionBlock[] };
@@ -186,6 +193,64 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
         </p>
       ) : null;
     }
+    case "image": {
+      const lead = block.id === ctx.leadImageId;
+      return (
+        <figure>
+          <img
+            src={mediaUrl(block.id, block.image, ctx)}
+            // Notion has no alt text; a caption is read from <figcaption>
+            alt=""
+            loading={lead ? "eager" : "lazy"}
+            fetchPriority={lead ? "high" : undefined}
+            decoding="async"
+          />
+          {block.image.caption.length > 0 && (
+            <figcaption>
+              <RichText text={block.image.caption} ctx={ctx} />
+            </figcaption>
+          )}
+        </figure>
+      );
+    }
+    case "video":
+      // External videos (YouTube, ...) are embeds
+      return block.video.type === "file" ? (
+        // biome-ignore lint/a11y/useMediaCaption: Notion has no captions track
+        <video
+          controls
+          preload="metadata"
+          src={mediaUrl(block.id, block.video, ctx)}
+        />
+      ) : null;
+    case "audio":
+      return (
+        // biome-ignore lint/a11y/useMediaCaption: Notion has no captions track
+        <audio
+          controls
+          preload="metadata"
+          src={mediaUrl(block.id, block.audio, ctx)}
+        />
+      );
+    case "file":
+    case "pdf": {
+      const media = block.type === "file" ? block.file : block.pdf;
+      const name =
+        plain(media.caption) ||
+        (block.type === "file" ? block.file.name : "") ||
+        block.type.toUpperCase();
+      return (
+        <p className="notion-file">
+          <a
+            href={mediaUrl(block.id, media, ctx)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {name}
+          </a>
+        </p>
+      );
+    }
     default:
       return null;
   }
@@ -253,6 +318,28 @@ export type NotionBlocksProps = NotionBlocksOptions & { blocks: NotionBlock[] };
 export const NotionBlocks = ({
   blocks,
   pageUrl = () => undefined,
-}: NotionBlocksProps) => (
-  <Blocks blocks={blocks} ctx={{ pageUrl, headings: headingsOf(blocks) }} />
-);
+  fileUrl,
+}: NotionBlocksProps) => {
+  // Without a fileUrl, fall back to Notion's own (expiring) URLs
+  const ownUrls = fileUrl ? {} : uploadedUrls(blocks);
+  const ctx: Context = {
+    pageUrl,
+    fileUrl: fileUrl ?? ((id) => ownUrls[id] ?? ""),
+    headings: headingsOf(blocks),
+    leadImageId: blocks.slice(0, 3).find((block) => block.type === "image")?.id,
+  };
+  return <Blocks blocks={blocks} ctx={ctx} />;
+};
+
+// block id -> Notion's signed URL, for every uploaded file in the tree
+const uploadedUrls = (blocks: NotionBlock[]): Record<string, string> =>
+  Object.fromEntries(
+    blocks.flatMap((block): [string, string][] => {
+      const value = (block as unknown as Record<string, Media | undefined>)[
+        block.type
+      ];
+      const own: [string, string][] =
+        value?.type === "file" ? [[block.id, value.file.url]] : [];
+      return [...own, ...Object.entries(uploadedUrls(block.children ?? []))];
+    }),
+  );

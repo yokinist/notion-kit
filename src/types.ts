@@ -14,6 +14,12 @@ export type NotionBlocksOptions = {
    * undefined for link to notion.so.
    */
   pageUrl?: (pageId: string) => string | undefined;
+  /**
+   * URL for a file uploaded to Notion. Notion's own URLs expire after an
+   * hour, so point this at a route that redirects to a fresh one, e.g.
+   * createFileHandler from @yokinist/notion-kit.
+   */
+  fileUrl?: (blockId: string) => string;
 };
 
 export type Heading = { id: string; level: 1 | 2 | 3; text: string };
@@ -22,4 +28,6 @@ export type Heading = { id: string; level: 1 | 2 | 3; text: string };
 export type Context = Required<NotionBlocksOptions> & {
   // Headings of the top-level blocks, for table_of_contents
   headings: Heading[];
+  // The image likely to be the largest contentful paint
+  leadImageId: string | undefined;
 };
