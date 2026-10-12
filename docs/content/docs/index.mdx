@@ -37,3 +37,5 @@ notion-kit is two small packages for using Notion as the place you write, and yo
 | Look | Your site's typography | Notion's |
 | Database views | No | Table, gallery, board and list |
 | Framework | React 19 Server Components (Next.js App Router, Waku, …) | Any React app |
+
+react-notion-x can also render official API data by converting it with [notion-compat](https://www.npmjs.com/package/notion-compat). As of notion-compat 8.0.8, that path targets `@notionhq/client` 2.x (the current release is 5.x), has no database view support, and leaves some blocks partial: bookmarks without their image and description, and images, videos and embeds without captions. notion-kit is built for the current official API and fills those gaps.
