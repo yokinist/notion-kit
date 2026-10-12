@@ -11,7 +11,8 @@
     "build": "npm run build -w packages -w docs",
     "test": "npm test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "lint": "biome check ."
+    "lint": "biome check .",
+    "postinstall": "npm run build -w packages"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.15"
