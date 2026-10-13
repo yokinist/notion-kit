@@ -1,5 +1,7 @@
 # notion-kit with Next.js
 
+**Preview:** https://notion-kit-next.vercel.app
+
 A blog on a Notion database, with the Next.js App Router. Pages are static and revalidate every minute (ISR).
 
 | File | What it does |

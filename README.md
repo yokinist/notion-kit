@@ -11,7 +11,7 @@ Build sites on the [official Notion API](https://developers.notion.com), with Re
 
 ## Examples
 
-Blogs on a Notion database in [Next.js](examples/next-blog), [React Router](examples/react-router-blog) and [TanStack Start](examples/tanstack-start-blog). Start your own from one:
+Blogs on a Notion database in [Next.js](examples/next-blog) ([preview](https://notion-kit-next.vercel.app)), [React Router](examples/react-router-blog) ([preview](https://notion-kit-react-router.vercel.app)) and [TanStack Start](examples/tanstack-start-blog) ([preview](https://notion-kit-tanstack-start.vercel.app)). Start your own from one:
 
 ```bash
 npx giget@latest gh:yokinist/notion-kit/examples/next-blog my-blog

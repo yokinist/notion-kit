@@ -1,5 +1,7 @@
 # notion-kit with React Router
 
+**Preview:** https://notion-kit-react-router.vercel.app
+
 A blog on a Notion database, with React Router's [RSC Framework Mode](https://reactrouter.com/how-to/react-server-components) on Vite. Routes export a `ServerComponent`, so `<NotionBlocks>` renders on the server.
 
 React Router's RSC support is still marked unstable (`unstable_reactRouterRSC`).
