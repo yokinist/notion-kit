@@ -67,7 +67,10 @@ export default async function Page({ params }) {
   components={{
     Link: NextLink, // links to pages on your site
     Tweet: MyTweet, // replaces react-tweet
+    callout: MyCallout, // any block type; see Styling
   }}
+  // Classes for blocks of a type; see Styling
+  classNames={{ callout: "rounded-xl p-4" }}
 />
 ```
 
@@ -87,7 +90,67 @@ export const GET = createFileHandler({
 
 ## Styling
 
-The markup is the HTML you would write by hand, so typography styles such as Tailwind's [`prose`](https://github.com/tailwindlabs/tailwindcss-typography) cover most of it. `@yokinist/notion-rsc/styles.css` adds styles for the Notion-specific parts, all under `notion-*` classes, and includes KaTeX's stylesheet:
+Every part of the output can be changed, from one color to the whole markup. Pick the level you need:
+
+1. **Your typography.** The markup is the HTML you would write by hand, so styles such as Tailwind's [`prose`](https://github.com/tailwindlabs/tailwindcss-typography) cover most of it.
+2. **Custom properties.** `@yokinist/notion-rsc/styles.css` styles the Notion-specific parts (and includes KaTeX's stylesheet). Its values are custom properties you can set on `:root`, or on any element to change one part of a page.
+3. **Your CSS.** The stylesheet lives in the `components` [cascade layer](https://developer.mozilla.org/docs/Web/CSS/@layer), so any CSS of yours outside a layer overrides it, with no `!important` and no specificity fights.
+4. **`classNames`.** Add classes to every block of a type, e.g. Tailwind utilities.
+5. **`components`.** Render a block type with your own component.
+
+### Custom properties
+
+```css
+:root {
+  --notion-border: #e4e4e7; /* lines around cards */
+  --notion-muted: #71717a; /* secondary text */
+  --notion-hover: rgb(127 127 127 / 0.06); /* card hover */
+  --notion-radius: 0.75rem; /* cards: callouts, bookmarks, players */
+  --notion-radius-small: 0.5rem; /* code, images, artwork */
+  --notion-space: 1.5rem; /* space above and below cards, code, equations */
+  --notion-red: #dc2626; /* Notion's text colors: --notion-gray, -brown, -orange, -yellow, -green, -blue, -purple, -pink, -red */
+}
+```
+
+### Classes and components
+
+```tsx
+<NotionBlocks
+  blocks={blocks}
+  classNames={{
+    callout: "rounded-2xl bg-amber-50 p-6",
+    code: "my-8",
+  }}
+  components={{
+    // Any block type; you get the block, its rendered text and children
+    callout: ({ block, text, children }) => (
+      <aside className="note">
+        {block.callout.icon?.type === "emoji" && block.callout.icon.emoji}
+        <div>
+          {text}
+          {children}
+        </div>
+      </aside>
+    ),
+    bulleted_list_item: ({ text, children }) => (
+      <li className="my-item">
+        {text}
+        {children}
+      </li>
+    ),
+  }}
+/>
+```
+
+`classNames` keeps the `notion-*` class and adds yours to the block's outer element. A component replaces the block entirely, including the `<li>` of a list item.
+
+### With Tailwind
+
+Import `styles.css` after your Tailwind CSS. Cascade layers are ordered by where they first appear, and Tailwind's import declares `theme, base, components, utilities`; the stylesheet then joins Tailwind's `components` layer, above preflight and below utilities, so classes from `classNames` win. Cards, code, embeds and the table of contents carry `not-prose`, so `prose` styles the writing around them, not their insides.
+
+Without Tailwind, put your own base styles in a layer declared first (`@layer base, components;`) if they use element selectors like `img { height: auto }`, so they do not override the cards.
+
+### Classes
 
 | Class | Block |
 | --- | --- |
@@ -98,6 +161,7 @@ The markup is the HTML you would write by hand, so typography styles such as Tai
 | `notion-table-of-contents` | table of contents |
 | `notion-code` | code |
 | `notion-equation` | block equation |
+| `notion-image`, `notion-video`, `notion-audio` | image, video, audio |
 | `notion-bookmark` | bookmark |
 | `notion-embed` | embed player |
 | `notion-color-*` | text colors, e.g. `notion-color-red`, `notion-color-red-background` |
