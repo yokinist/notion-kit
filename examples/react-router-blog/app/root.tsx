@@ -1,5 +1,5 @@
-import "@yokinist/notion-rsc/styles.css";
 import "./styles.css";
+import "@yokinist/notion-rsc/styles.css";
 import {
   isRouteErrorResponse,
   Link,

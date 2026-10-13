@@ -1,7 +1,8 @@
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
-import "@yokinist/notion-rsc/styles.css";
+// After global.css, whose Tailwind import sets the layer order
 import "./global.css";
+import "@yokinist/notion-rsc/styles.css";
 import { Inter } from "next/font/google";
 import { siteUrl } from "@/lib/shared";
 
