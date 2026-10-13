@@ -1,4 +1,5 @@
 import { codeToHtml } from "shiki";
+import { cx } from "./cx.js";
 
 // Notion language names that Shiki spells differently
 const LANGUAGES: Record<string, string> = {
@@ -27,14 +28,16 @@ const highlight = async (code: string, language: string) => {
 export const Code = async ({
   code,
   language,
+  className,
 }: {
   code: string;
   language: string;
+  className?: string;
 }) => {
   const html = await highlight(code, language);
   return (
     <div
-      className="notion-code"
+      className={cx("notion-code not-prose", className)}
       // biome-ignore lint/security/noDangerouslySetInnerHtml: Shiki escapes the code
       dangerouslySetInnerHTML={{ __html: html }}
     />

@@ -1,3 +1,4 @@
+import { cx } from "./cx.js";
 import { getLinkPreview } from "./linkPreview.js";
 import type { Context } from "./types.js";
 
@@ -10,14 +11,22 @@ const hostOf = (url: string) => {
 };
 
 /** A link card with the page's own title, description and image. */
-export const Bookmark = async ({ url, ctx }: { url: string; ctx: Context }) => {
+export const Bookmark = async ({
+  url,
+  ctx,
+  className,
+}: {
+  url: string;
+  ctx: Context;
+  className?: string;
+}) => {
   const { title, description, image } = await getLinkPreview(
     url,
     ctx.fetchInit,
   );
   return (
     <a
-      className="notion-bookmark"
+      className={cx("notion-bookmark not-prose", className)}
       href={url}
       target="_blank"
       rel="noreferrer noopener"

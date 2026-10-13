@@ -1,6 +1,7 @@
 "use client";
 
 import { type CSSProperties, type ReactNode, useState } from "react";
+import { cx } from "./cx.js";
 
 export type EmbedFacadeProps = {
   src: string;
@@ -10,6 +11,8 @@ export type EmbedFacadeProps = {
   author?: string;
   image?: string;
   playLabel: string;
+  /** Added to the card and to the player once it loads. */
+  className?: string;
 };
 
 const PlayIcon = () => (
@@ -72,12 +75,13 @@ export const EmbedFacade = ({
   author,
   image,
   playLabel,
+  className: extra,
 }: EmbedFacadeProps) => {
   const [active, setActive] = useState(false);
   if (active) {
     return (
       <iframe
-        className="notion-embed-player"
+        className={cx("notion-embed-player not-prose", extra)}
         src={provider === "YouTube" ? `${src}?autoplay=1` : src}
         title={title ?? provider}
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
@@ -97,7 +101,7 @@ export const EmbedFacade = ({
   ) => (
     <button
       type="button"
-      className={`notion-embed ${className}`.trim()}
+      className={cx("notion-embed not-prose", className, extra)}
       style={style}
       onClick={() => setActive(true)}
       aria-label={`${playLabel}: ${name}`}

@@ -1,4 +1,5 @@
 import { Bookmark } from "./Bookmark.js";
+import { cx } from "./cx.js";
 import { EmbedFacade } from "./EmbedFacade.js";
 import { toEmbed } from "./embeds.js";
 import { getLinkPreview, type LinkPreview } from "./linkPreview.js";
@@ -83,7 +84,15 @@ const followRedirects = async (url: string, init: RequestInit) => {
 };
 
 /** An embed or external video: a post on X, a player, or a link card. */
-export const Embed = async ({ url, ctx }: { url: string; ctx: Context }) => {
+export const Embed = async ({
+  url,
+  ctx,
+  className,
+}: {
+  url: string;
+  ctx: Context;
+  className?: string;
+}) => {
   let pageUrl = url;
   let embed = toEmbed(url);
   if (embed.kind === "redirect") {
@@ -94,7 +103,7 @@ export const Embed = async ({ url, ctx }: { url: string; ctx: Context }) => {
     case "tweet": {
       const Tweet = ctx.components.Tweet ?? DefaultTweet;
       return (
-        <div className="notion-tweet">
+        <div className={cx("notion-tweet not-prose", className)}>
           <Tweet id={embed.id} />
         </div>
       );
@@ -114,10 +123,11 @@ export const Embed = async ({ url, ctx }: { url: string; ctx: Context }) => {
           author={author}
           image={image}
           playLabel={ctx.labels.play}
+          className={className}
         />
       );
     }
     default:
-      return <Bookmark url={url} ctx={ctx} />;
+      return <Bookmark url={url} ctx={ctx} className={className} />;
   }
 };

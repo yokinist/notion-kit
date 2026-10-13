@@ -1,13 +1,22 @@
+import {
+  type ComponentType,
+  cloneElement,
+  isValidElement,
+  type ReactNode,
+} from "react";
 import { Bookmark } from "./Bookmark.js";
 import { Code } from "./Code.js";
+import { cx } from "./cx.js";
 import { Embed } from "./Embed.js";
 import { Equation } from "./Equation.js";
 import { InternalLink, RichText } from "./RichText.js";
 import type {
+  BlockComponentProps,
   Context,
   Heading,
   NotionBlock,
   NotionBlocksOptions,
+  RichText as RichTextValue,
 } from "./types.js";
 
 const plain = (text: { plain_text: string }[]) =>
@@ -44,7 +53,8 @@ const groupLists = (blocks: NotionBlock[]) =>
 const Children = ({ block, ctx }: { block: NotionBlock; ctx: Context }) =>
   block.children ? <Blocks blocks={block.children} ctx={ctx} /> : null;
 
-const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
+// The default element for a block, before classNames and components apply
+const renderBlock = (block: NotionBlock, ctx: Context): ReactNode => {
   switch (block.type) {
     case "paragraph":
       return (
@@ -165,7 +175,7 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
       );
     case "table_of_contents":
       return (
-        <nav className="notion-table-of-contents">
+        <nav className="notion-table-of-contents not-prose">
           <ul>
             {ctx.headings.map((heading) => (
               <li key={heading.id} data-level={heading.level}>
@@ -204,7 +214,7 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
     case "image": {
       const lead = block.id === ctx.leadImageId;
       return (
-        <figure>
+        <figure className="notion-image">
           <img
             src={mediaUrl(block.id, block.image, ctx)}
             // Notion has no alt text; a caption is read from <figcaption>
@@ -225,6 +235,7 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
       return block.video.type === "file" ? (
         // biome-ignore lint/a11y/useMediaCaption: Notion has no captions track
         <video
+          className="notion-video"
           controls
           preload="metadata"
           src={mediaUrl(block.id, block.video, ctx)}
@@ -236,6 +247,7 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
       return (
         // biome-ignore lint/a11y/useMediaCaption: Notion has no captions track
         <audio
+          className="notion-audio"
           controls
           preload="metadata"
           src={mediaUrl(block.id, block.audio, ctx)}
@@ -278,6 +290,38 @@ const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
     default:
       return null;
   }
+};
+
+const textOf = (block: NotionBlock): RichTextValue | undefined =>
+  (block as unknown as Record<string, { rich_text?: RichTextValue }>)[
+    block.type
+  ]?.rich_text;
+
+// Your component for the block's type, if any, with its text and children
+const custom = (block: NotionBlock, ctx: Context) => {
+  const Component = ctx.components[block.type] as
+    | ComponentType<BlockComponentProps>
+    | undefined;
+  if (!Component) return undefined;
+  const text = textOf(block);
+  return (
+    <Component
+      key={block.id}
+      block={block}
+      text={text && <RichText text={text} ctx={ctx} />}
+    >
+      {block.children && <Blocks blocks={block.children} ctx={ctx} />}
+    </Component>
+  );
+};
+
+const Block = ({ block, ctx }: { block: NotionBlock; ctx: Context }) => {
+  const replaced = custom(block, ctx);
+  if (replaced) return replaced;
+  const node = renderBlock(block, ctx);
+  const className = ctx.classNames[block.type];
+  if (!className || !isValidElement<{ className?: string }>(node)) return node;
+  return cloneElement(node, { className: cx(node.props.className, className) });
 };
 
 const LEVELS = { heading_1: 1, heading_2: 2, heading_3: 3 } as const;
@@ -326,12 +370,15 @@ const Blocks = ({ blocks, ctx }: { blocks: NotionBlock[]; ctx: Context }) =>
     const List = group.ordered ? "ol" : "ul";
     return (
       <List key={group.items[0]?.id}>
-        {group.items.map((item) => (
-          <li key={item.id}>
-            <RichText text={listItemText(item)} ctx={ctx} />
-            <Children block={item} ctx={ctx} />
-          </li>
-        ))}
+        {group.items.map(
+          (item) =>
+            custom(item, ctx) ?? (
+              <li key={item.id} className={ctx.classNames[item.type]}>
+                <RichText text={listItemText(item)} ctx={ctx} />
+                <Children block={item} ctx={ctx} />
+              </li>
+            ),
+        )}
       </List>
     );
   });
@@ -346,6 +393,7 @@ export const NotionBlocks = ({
   fetchInit = {},
   labels = {},
   components = {},
+  classNames = {},
 }: NotionBlocksProps) => {
   // Without a fileUrl, fall back to Notion's own (expiring) URLs
   const ownUrls = fileUrl ? {} : uploadedUrls(blocks);
@@ -355,6 +403,7 @@ export const NotionBlocks = ({
     fetchInit,
     labels: { play: labels.play ?? "Play" },
     components,
+    classNames,
     headings: headingsOf(blocks),
     leadImageId: blocks.slice(0, 3).find((block) => block.type === "image")?.id,
   };
