@@ -1,6 +1,6 @@
 {
   "name": "@yokinist/notion-fetch",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Rate-limit-safe Notion API helpers: block trees, database rows, and fresh URLs for uploaded files",
   "license": "MIT",
   "author": "yokinist",
