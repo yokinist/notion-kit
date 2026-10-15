@@ -22,8 +22,11 @@ export const fetchBlockTree = async (
   blockId: string,
   { limit = unlimited }: FetchOptions = {},
 ): Promise<NotionBlock[]> => {
-  const results = await limit(() =>
-    collectPaginatedAPI(notion.blocks.children.list, { block_id: blockId }),
+  // One request per call, so a retry refetches one page, not all of them
+  const results = await collectPaginatedAPI(
+    (args: Parameters<Client["blocks"]["children"]["list"]>[0]) =>
+      limit(() => notion.blocks.children.list(args)),
+    { block_id: blockId },
   );
   const blocks = results.filter(isFullBlock);
   return Promise.all(

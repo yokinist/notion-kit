@@ -5,11 +5,26 @@ export type RequestLimiterOptions = {
   concurrency?: number;
   /** How many times one request is retried before its error is thrown. */
   maxRetries?: number;
+  /**
+   * How long one attempt may take, response body included, before it is
+   * given up and retried. The client's own timeoutMs only covers the headers.
+   */
+  timeoutMs?: number;
 };
 
 export type RequestLimiter = <T>(send: () => Promise<T>) => Promise<T>;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// ponytail: the abandoned request keeps its connection until it ends or the
+// process exits; the client takes no AbortSignal to cancel it
+const withTimeout = <T>(promise: Promise<T>, ms: number) => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new RequestTimeoutError()), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+};
 
 // How long to wait before retrying, or undefined if the error is final
 const retryDelay = (error: unknown, attempt: number): number | undefined => {
@@ -26,13 +41,15 @@ const retryDelay = (error: unknown, attempt: number): number | undefined => {
 
 /**
  * Runs Notion API requests with a cap on how many are in flight, retrying
- * rate limits after the delay Notion asks for, and timeouts. The official client also
- * retries, but gives up after a couple of attempts, which builds that fetch
- * many pages at once easily exceed.
+ * rate limits after the delay Notion asks for, and requests that take longer
+ * than timeoutMs, so one stalled connection cannot hang a build. The official
+ * client also retries, but gives up after a couple of attempts, which builds
+ * that fetch many pages at once easily exceed. Wrap one request per call.
  */
 export const createRequestLimiter = ({
   concurrency = 2,
   maxRetries = 10,
+  timeoutMs = 30_000,
 }: RequestLimiterOptions = {}): RequestLimiter => {
   let active = 0;
   const waiting: (() => void)[] = [];
@@ -44,7 +61,7 @@ export const createRequestLimiter = ({
       active++;
       let delay: number | undefined;
       try {
-        return await send();
+        return await withTimeout(send(), timeoutMs);
       } catch (error) {
         delay = attempt < maxRetries ? retryDelay(error, attempt) : undefined;
         if (delay === undefined) throw error;

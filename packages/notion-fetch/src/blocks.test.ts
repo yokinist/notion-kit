@@ -1,5 +1,5 @@
-import type { Client } from "@notionhq/client";
-import { describe, expect, it } from "vitest";
+import { Client } from "@notionhq/client";
+import { describe, expect, it, vi } from "vitest";
 import { createRequestLimiter, fetchBlockTree } from "./index.js";
 
 type FakeBlock = { id: string; type: string; has_children?: boolean };
@@ -116,5 +116,47 @@ describe("fetchBlockTree", () => {
     });
 
     expect(maxInFlight).toBe(1);
+  });
+
+  it("retries a response that stalls, without refetching the pages it already has", async () => {
+    vi.useFakeTimers();
+    // Headers arrive, then the body never finishes: the client's own
+    // timeoutMs only covers the headers
+    const stalled = () =>
+      new Response(new ReadableStream({ start: () => {} }), { status: 200 });
+    const page = (id: string, next: string | null) =>
+      Response.json({
+        object: "list",
+        results: [
+          {
+            object: "block",
+            id,
+            type: "paragraph",
+            paragraph: { rich_text: [] },
+            has_children: false,
+          },
+        ],
+        has_more: next !== null,
+        next_cursor: next,
+      });
+    const requested: string[] = [];
+    const notion = new Client({
+      auth: "test",
+      fetch: async (url) => {
+        const cursor = new URL(url).searchParams.get("start_cursor") ?? "first";
+        requested.push(cursor);
+        if (cursor === "first") return page("a", "second");
+        return requested.length === 2 ? stalled() : page("b", null);
+      },
+    });
+
+    const blocks = fetchBlockTree(notion, "page", {
+      limit: createRequestLimiter({ concurrency: 1, timeoutMs: 30_000 }),
+    });
+    await vi.advanceTimersByTimeAsync(32_000);
+    vi.useRealTimers();
+
+    expect(ids(await blocks)).toEqual(["a", "b"]);
+    expect(requested).toEqual(["first", "second", "second"]);
   });
 });
