@@ -62,7 +62,7 @@ export default async function Page({ params }) {
   pageUrl={(pageId) => slugs.get(pageId) && `/posts/${slugs.get(pageId)}`}
   // URL for files uploaded to Notion (see below)
   fileUrl={(blockId) => `/api/notion/file/${blockId}`}
-  // Passed to fetch for oEmbed and link previews
+  // Passed to fetch for oEmbed, link previews and posts on X
   fetchInit={{ next: { revalidate: 86400 } }}
   // UI text
   labels={{ play: "再生" }}

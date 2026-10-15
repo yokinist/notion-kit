@@ -210,4 +210,30 @@ describe("NotionBlocks bookmarks and embeds", () => {
       "An album",
     );
   });
+
+  it("fetches posts on X with fetchInit and a timeout", async () => {
+    const fetch = serve({
+      "https://cdn.syndication.twimg.com/tweet-result": () =>
+        new Response(null, { status: 404 }),
+    });
+    await renderToDom(
+      <NotionBlocks
+        blocks={[
+          block("embed", {
+            url: "https://x.com/someone/status/42",
+            caption: [],
+          }),
+        ]}
+        fetchInit={{ cache: "force-cache" }}
+      />,
+    );
+
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("id=42"),
+      expect.objectContaining({
+        cache: "force-cache",
+        signal: expect.any(AbortSignal),
+      }),
+    );
+  });
 });

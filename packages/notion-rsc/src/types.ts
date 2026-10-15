@@ -39,7 +39,7 @@ export type NotionBlocksOptions = {
    * createFileHandler from @yokinist/notion-fetch.
    */
   fileUrl?: (blockId: string) => string;
-  /** Passed to fetch for link previews and oEmbed, e.g. Next.js caching. */
+  /** Passed to fetch for link previews, oEmbed and posts on X, e.g. Next.js caching. */
   fetchInit?: RequestInit;
   /** Text in the UI, for translation. */
   labels?: { play?: string };

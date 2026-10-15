@@ -67,9 +67,20 @@ const playerPreview = async (
 
 // Loaded only when a page has a post: react-tweet imports CSS modules,
 // which need a bundler
-const DefaultTweet = async ({ id }: { id: string }) => {
+const DefaultTweet = async ({
+  id,
+  fetchInit,
+}: {
+  id: string;
+  fetchInit: RequestInit;
+}) => {
   const { Tweet } = await import("react-tweet");
-  return <Tweet id={id} />;
+  return (
+    <Tweet
+      id={id}
+      fetchOptions={{ ...fetchInit, signal: AbortSignal.timeout(10_000) }}
+    />
+  );
 };
 
 const followRedirects = async (url: string, init: RequestInit) => {
@@ -101,10 +112,14 @@ export const Embed = async ({
   }
   switch (embed.kind) {
     case "tweet": {
-      const Tweet = ctx.components.Tweet ?? DefaultTweet;
+      const Tweet = ctx.components.Tweet;
       return (
         <div className={cx("notion-tweet not-prose", className)}>
-          <Tweet id={embed.id} />
+          {Tweet ? (
+            <Tweet id={embed.id} />
+          ) : (
+            <DefaultTweet id={embed.id} fetchInit={ctx.fetchInit} />
+          )}
         </div>
       );
     }
