@@ -4,7 +4,7 @@
 
 Small helpers for building sites on the [official Notion API](https://developers.notion.com) (`@notionhq/client`):
 
-- **Rate-limit safe requests.** Notion allows about 3 requests per second per integration. Statically generating many pages at once hits that quickly, and the official client gives up after a couple of retries. `createRequestLimiter` caps requests in flight and keeps retrying rate limits (waiting for Notion's `retry_after`) and timeouts. It also gives up and retries a request whose response stalls: the client's own `timeoutMs` stops at the headers, so a stalled body would otherwise hang a build.
+- **Rate-limit safe requests.** Notion allows about 3 requests per second per integration. Statically generating many pages at once hits that quickly, and the official client gives up after a couple of retries. `createRequestLimiter` caps requests in flight and keeps retrying rate limits (waiting for Notion's `retry_after`) and timeouts. Pass `createTimeoutFetch()` to the client so a request whose response stalls is aborted and retried as a new one: the client's own `timeoutMs` stops at the headers, so a stalled body would otherwise hang a build.
 - **Whole pages in one call.** `fetchBlockTree` returns a page's content with nested blocks under `children`, following pagination.
 - **Files that do not expire.** Files uploaded to Notion get signed URLs that expire after an hour, so pages cached by a CDN or ISR end up with broken images. `createFileHandler` is a request handler you link to instead: it redirects to a fresh URL and lets the CDN cache the redirect. No image optimization service needed.
 - **Database rows and property values.** `queryDatabase` and `getPropertyText` / `getPropertyNames` / `getPropertyDate`.
@@ -27,13 +27,17 @@ Create an [internal integration](https://www.notion.so/profile/integrations), an
 import { Client } from "@notionhq/client";
 import {
   createRequestLimiter,
+  createTimeoutFetch,
   fetchBlockTree,
   getPropertyDate,
   getPropertyText,
   queryDatabase,
 } from "@yokinist/notion-fetch";
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
+const notion = new Client({
+  auth: process.env.NOTION_TOKEN,
+  fetch: createTimeoutFetch(), // aborts requests that stall, body included
+});
 const limit = createRequestLimiter(); // share one per process
 
 const rows = await queryDatabase(notion, process.env.NOTION_DATABASE_ID, { limit });
@@ -86,6 +90,7 @@ A failed fetch is not kept, so the next caller tries again.
 | Function | Returns |
 | --- | --- |
 | `createRequestLimiter({ concurrency = 2, maxRetries = 10, timeoutMs = 30_000 })` | `limit(send)`: runs `send` within the cap, retrying 429s and attempts slower than `timeoutMs` (body included). Wrap one request per call |
+| `createTimeoutFetch({ timeoutMs = 30_000 })` | a `fetch` for `new Client({ fetch })` that aborts each request, body included, after `timeoutMs`. Its signal also stops Next.js from sharing a stalled GET with the retry |
 | `fetchBlockTree(notion, pageId, { limit })` | `NotionBlock[]`; nested blocks under `children`. Child pages and databases are not descended into |
 | `queryDatabase(notion, databaseId, { limit })` | every row (`PageObjectResponse[]`) of the database's first data source |
 | `createFileHandler({ notion, cacheSeconds = 2400, limit })` | `(request: Request) => Promise<Response>` |

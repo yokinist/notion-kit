@@ -1,6 +1,7 @@
 import { Client } from "@notionhq/client";
 import {
   createRequestLimiter,
+  createTimeoutFetch,
   getPropertyDate,
   getPropertyNames,
   getPropertyText,
@@ -18,7 +19,11 @@ for (const file of [".env.local", "../.env.local"]) {
   }
 }
 
-export const notion = new Client({ auth: process.env.NOTION_TOKEN });
+export const notion = new Client({
+  auth: process.env.NOTION_TOKEN,
+  // Aborts a request whose response stalls, so it is retried
+  fetch: createTimeoutFetch(),
+});
 
 // One per process: keeps requests under Notion's rate limit
 export const limit = createRequestLimiter();

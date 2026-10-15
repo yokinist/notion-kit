@@ -1,6 +1,10 @@
 import { Client } from "@notionhq/client";
-import { describe, expect, it, vi } from "vitest";
-import { createRequestLimiter, fetchBlockTree } from "./index.js";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+  createRequestLimiter,
+  createTimeoutFetch,
+  fetchBlockTree,
+} from "./index.js";
 
 type FakeBlock = { id: string; type: string; has_children?: boolean };
 
@@ -158,5 +162,48 @@ describe("fetchBlockTree", () => {
 
     expect(ids(await blocks)).toEqual(["a", "b"]);
     expect(requested).toEqual(["first", "second", "second"]);
+  });
+
+  describe("with createTimeoutFetch", () => {
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it("aborts a stalled response and retries it as a new request", async () => {
+      // Next.js shares identical GETs within a render unless they carry a
+      // signal, so without one a retry would get the same stalled response
+      const signals: (AbortSignal | undefined)[] = [];
+      vi.stubGlobal("fetch", async (_url: string, init?: RequestInit) => {
+        signals.push(init?.signal ?? undefined);
+        if (signals.length > 1)
+          return Response.json({
+            object: "list",
+            results: [],
+            has_more: false,
+            next_cursor: null,
+          });
+        // Like undici: aborting errors the body that is being read
+        const body = new ReadableStream({
+          start: (controller) =>
+            init?.signal?.addEventListener("abort", () =>
+              controller.error(init.signal?.reason),
+            ),
+        });
+        return new Response(body, { status: 200 });
+      });
+      const notion = new Client({
+        auth: "test",
+        fetch: createTimeoutFetch({ timeoutMs: 20 }),
+      });
+
+      const blocks = await fetchBlockTree(notion, "page", {
+        limit: createRequestLimiter({ concurrency: 1 }),
+      });
+
+      expect(blocks).toEqual([]);
+      expect(signals).toHaveLength(2);
+      expect(signals[0]?.aborted).toBe(true);
+      expect(signals[1]).toBeInstanceOf(AbortSignal);
+    });
   });
 });

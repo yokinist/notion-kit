@@ -8,6 +8,7 @@ export { createDedupe } from "./dedupe.js";
 export { createFileHandler, type FileHandlerOptions } from "./files.js";
 export {
   createRequestLimiter,
+  createTimeoutFetch,
   type RequestLimiter,
   type RequestLimiterOptions,
 } from "./limiter.js";

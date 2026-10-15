@@ -21,9 +21,12 @@ npm install @yokinist/notion-fetch @yokinist/notion-rsc @notionhq/client
 
 ```tsx title="app/notion.ts"
 import { Client } from "@notionhq/client";
-import { createRequestLimiter } from "@yokinist/notion-fetch";
+import { createRequestLimiter, createTimeoutFetch } from "@yokinist/notion-fetch";
 
-export const notion = new Client({ auth: process.env.NOTION_TOKEN });
+export const notion = new Client({
+  auth: process.env.NOTION_TOKEN,
+  fetch: createTimeoutFetch(), // aborts requests that stall
+});
 export const limit = createRequestLimiter();
 ```
 

@@ -88,6 +88,20 @@ describe("createRequestLimiter", () => {
     expect(send).toHaveBeenCalledTimes(2);
   });
 
+  it("retries a request that its fetch aborted for taking too long", async () => {
+    const limit = createRequestLimiter();
+    const send = vi
+      .fn<() => Promise<string>>()
+      .mockRejectedValueOnce(new DOMException("timed out", "TimeoutError"))
+      .mockResolvedValueOnce("ok");
+
+    const result = limit(send);
+    await vi.runAllTimersAsync();
+
+    await expect(result).resolves.toBe("ok");
+    expect(send).toHaveBeenCalledTimes(2);
+  });
+
   it("gives up after maxRetries and throws the last error", async () => {
     const limit = createRequestLimiter({ maxRetries: 2 });
     const send = vi.fn(() => Promise.reject(rateLimited("1")));

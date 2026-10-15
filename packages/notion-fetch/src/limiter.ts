@@ -16,8 +16,7 @@ export type RequestLimiter = <T>(send: () => Promise<T>) => Promise<T>;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// ponytail: the abandoned request keeps its connection until it ends or the
-// process exits; the client takes no AbortSignal to cancel it
+// The request itself is not cancelled; createTimeoutFetch does that
 const withTimeout = <T>(promise: Promise<T>, ms: number) => {
   let timer: ReturnType<typeof setTimeout> | undefined;
   const timeout = new Promise<never>((_, reject) => {
@@ -28,7 +27,13 @@ const withTimeout = <T>(promise: Promise<T>, ms: number) => {
 
 // How long to wait before retrying, or undefined if the error is final
 const retryDelay = (error: unknown, attempt: number): number | undefined => {
-  if (RequestTimeoutError.isRequestTimeoutError(error)) return 1000;
+  // RequestTimeoutError comes from the client or withTimeout, TimeoutError
+  // from createTimeoutFetch's signal
+  if (
+    RequestTimeoutError.isRequestTimeoutError(error) ||
+    (error instanceof Error && error.name === "TimeoutError")
+  )
+    return 1000;
   if (APIResponseError.isAPIResponseError(error) && error.status === 429) {
     const seconds = Number(
       (error.additional_data as { retry_after?: string } | undefined)
@@ -74,3 +79,14 @@ export const createRequestLimiter = ({
     }
   };
 };
+
+/**
+ * A fetch for `new Client({ fetch })` that aborts each request, response body
+ * included, after timeoutMs, so a stalled connection is closed. The signal
+ * also keeps Next.js from sharing one GET between identical requests in a
+ * render, so a retry is a new request, not the same stalled response.
+ */
+export const createTimeoutFetch =
+  ({ timeoutMs = 30_000 }: { timeoutMs?: number } = {}) =>
+  (url: string, init?: RequestInit) =>
+    fetch(url, { ...init, signal: AbortSignal.timeout(timeoutMs) });
