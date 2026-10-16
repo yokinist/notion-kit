@@ -122,13 +122,16 @@ export default async function Page() {
     ],
   ),
   b("column_list", {}, [
-    b("column", {}, [
+    b("column", { width_ratio: 0.6 }, [
       b("paragraph", rich(t("Columns", { bold: true }))),
-      b("paragraph", rich(t("Stack on small screens."))),
+      b(
+        "paragraph",
+        rich(t("Side by side from 768px wide, stacked on smaller screens.")),
+      ),
     ]),
-    b("column", {}, [
-      b("paragraph", rich(t("Side by side", { bold: true }))),
-      b("paragraph", rich(t("From 768px wide."))),
+    b("column", { width_ratio: 0.4 }, [
+      b("paragraph", rich(t("Widths", { bold: true }))),
+      b("paragraph", rich(t("As dragged in Notion: 60% and 40% here."))),
     ]),
   ]),
   b("divider", {}),

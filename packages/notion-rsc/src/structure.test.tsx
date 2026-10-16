@@ -193,5 +193,46 @@ describe("NotionBlocks structure", () => {
     expect(dom.textContent).toContain("synced");
     expect(dom.querySelector('a[href="/about"]')).not.toBeNull();
     expect(dom.querySelector('a[href="/child"]')?.textContent).toBe("Child");
+    // Columns without a width ratio share the width equally
+    expect(dom.querySelector(".notion-columns")?.getAttribute("style")).toBe(
+      null,
+    );
+  });
+
+  it("keeps the widths of columns resized in Notion", async () => {
+    const column = (id: string, width_ratio: number) =>
+      withId(
+        block(
+          "column",
+          { width_ratio },
+          {
+            has_children: true,
+            children: [withId(block("paragraph", rich(id)), `${id}-p`)],
+          },
+        ),
+        id,
+      );
+    const dom = await renderToDom(
+      <NotionBlocks
+        blocks={[
+          withId(
+            block(
+              "column_list",
+              {},
+              {
+                has_children: true,
+                children: [column("image", 0.6), column("empty", 0.4)],
+              },
+            ),
+            "columns",
+          ),
+        ]}
+      />,
+    );
+
+    const columns = dom.querySelector<HTMLElement>(".notion-columns");
+    expect(columns?.style.getPropertyValue("--notion-columns")).toBe(
+      "minmax(0, 0.6fr) minmax(0, 0.4fr)",
+    );
   });
 });

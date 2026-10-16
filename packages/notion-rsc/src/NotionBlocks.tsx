@@ -1,5 +1,6 @@
 import {
   type ComponentType,
+  type CSSProperties,
   cloneElement,
   isValidElement,
   type ReactNode,
@@ -163,9 +164,20 @@ const renderBlock = (block: NotionBlock, ctx: Context): ReactNode => {
         </div>
       );
     }
-    case "column_list":
+    case "column_list": {
+      // Widths set by dragging in Notion; the CSS uses them from 768px wide
+      const ratios = (block.children ?? []).map((column) =>
+        column.type === "column" ? column.column.width_ratio : undefined,
+      );
+      const style = ratios.some((ratio) => ratio !== undefined)
+        ? ({
+            "--notion-columns": ratios
+              .map((ratio) => `minmax(0, ${ratio ?? 1 / ratios.length}fr)`)
+              .join(" "),
+          } as CSSProperties)
+        : undefined;
       return (
-        <div className="notion-columns">
+        <div className="notion-columns" style={style}>
           {block.children?.map((column) => (
             <div key={column.id} className="notion-column">
               <Children block={column} ctx={ctx} />
@@ -173,6 +185,7 @@ const renderBlock = (block: NotionBlock, ctx: Context): ReactNode => {
           ))}
         </div>
       );
+    }
     case "table_of_contents":
       return (
         <nav className="notion-table-of-contents not-prose">

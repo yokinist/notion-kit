@@ -174,7 +174,9 @@ Dark mode follows a `.dark` class on an ancestor, or `prefers-color-scheme` when
 
 See them all rendered in the [demo](/docs/demo).
 
-Paragraph, headings 1–3, bulleted / numbered lists, to-do, toggle, quote, callout, divider, code, equation, table, column list, table of contents, image, video, audio, file, PDF, bookmark, embed, link preview, synced blocks, and links to pages (child pages and link-to-page blocks, shown when `pageUrl` returns a path). Databases are skipped.
+Paragraph, headings 1–3, bulleted / numbered lists, to-do, toggle, quote, callout, divider, code, equation, table, column list (side by side from 768px wide, at the widths set in Notion), table of contents, image, video, audio, file, PDF, bookmark, embed, link preview, synced blocks, and links to pages (child pages and link-to-page blocks, shown when `pageUrl` returns a path). Databases are skipped.
+
+The official API does not give the width of an image resized in Notion, so images are shown at their own size, up to the width of the text. To make one narrower, put it in a column next to an empty one and drag the divider.
 
 ## Third-party software and trademarks
 

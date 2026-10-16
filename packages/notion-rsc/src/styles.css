@@ -78,6 +78,8 @@
   @media (min-width: 768px) {
     .notion-columns {
       grid-auto-flow: column;
+      /* Set from the columns' widths in Notion; equal widths otherwise */
+      grid-template-columns: var(--notion-columns, none);
     }
   }
 
