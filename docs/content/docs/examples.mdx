@@ -39,6 +39,6 @@ Swap `next-blog` for `react-router-blog`, `tanstack-start-blog` or `cloudflare-b
 - **Next.js** renders posts in Server Components and caches them with ISR. Links between posts use `next/link`.
 - **React Router** routes export a `ServerComponent`; the post is fetched in the route's `loader`, which also returns the 404.
 - **TanStack Start** loaders also run in the browser on navigation, so the post is fetched and rendered in a server function with `renderServerComponent`.
-- **Cloudflare Workers** run the React Router example in workerd through the Cloudflare Vite plugin. The Notion client needs `dangerouslyAllowBrowser: true` there, because it takes a Worker for a browser.
+- **Cloudflare Workers** run the React Router example in workerd through the Cloudflare Vite plugin.
 
 In all of them, the file route is one line: notion-fetch's `createFileHandler` takes a `Request` and returns a `Response`.

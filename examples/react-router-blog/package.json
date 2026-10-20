@@ -9,7 +9,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@notionhq/client": "^5.27.0",
+    "@notionhq/client": "^5.27.1",
     "@react-router/serve": "^8.4.0",
     "@remix-run/node-fetch-server": "0.13.0",
     "@yokinist/notion-fetch": "^0.1.3",

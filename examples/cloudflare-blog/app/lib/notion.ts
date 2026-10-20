@@ -13,9 +13,6 @@ export const notion = new Client({
   auth: process.env.NOTION_TOKEN,
   // Aborts a request whose response stalls, so it is retried
   fetch: createTimeoutFetch(),
-  // Workers define WorkerGlobalScope, so the client takes them for a browser
-  // and refuses the token. This code runs only on the server.
-  dangerouslyAllowBrowser: true,
 });
 
 // One per isolate: keeps requests under Notion's rate limit

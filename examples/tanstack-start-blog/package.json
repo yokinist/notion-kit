@@ -12,7 +12,7 @@
     "typecheck": "tsr generate && tsc --noEmit"
   },
   "dependencies": {
-    "@notionhq/client": "^5.27.0",
+    "@notionhq/client": "^5.27.1",
     "@tanstack/react-router": "1.170.43",
     "@tanstack/react-start": "1.169.0",
     "@yokinist/notion-fetch": "^0.1.3",

@@ -13,10 +13,7 @@ React Router's RSC support is still marked unstable (`unstable_reactRouterRSC`).
 | `app/routes/post.tsx` | A post; links to other posts point to their pages here |
 | `app/routes/file.ts` | A resource route that redirects to fresh URLs of files uploaded to Notion |
 
-Two things differ from Node:
-
-- `@notionhq/client` takes a Worker for a browser, because Workers define `WorkerGlobalScope`, and refuses the token. `app/lib/notion.ts` passes `dangerouslyAllowBrowser: true`; the token still stays on the server.
-- Workers refuse to compile WebAssembly at runtime, so notion-rsc highlights code with Shiki's JavaScript regex engine.
+One thing differs from Node: Workers refuse to compile WebAssembly at runtime, so notion-rsc highlights code with Shiki's JavaScript regex engine.
 
 ## Start your own
 
