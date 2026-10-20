@@ -5,7 +5,7 @@
 Render Notion pages with [React Server Components](https://react.dev/reference/rsc/server-components), using the [official Notion API](https://developers.notion.com).
 
 - **Content ships as HTML, not JavaScript.** Blocks render on the server to plain, semantic HTML (`p`, `h2`, `ul`, `figure`, `table`, …), so the renderer never reaches the browser. The only client code is the click-to-load player for embeds and react-tweet's few interactive parts of posts on X.
-- **Code and math on the server.** Code blocks are highlighted with [Shiki](https://shiki.style) (light and dark themes), equations with [KaTeX](https://katex.org), both at render time.
+- **Code and math on the server.** Code blocks are highlighted with [Shiki](https://shiki.style) (light and dark themes), equations with [KaTeX](https://katex.org), both at render time. Shiki runs its JavaScript regex engine, not WebAssembly, so this works on Cloudflare Workers too.
 - **Embeds without third-party cookies.** Players show a preview from oEmbed and load the iframe only when clicked. Posts on X use [react-tweet](https://react-tweet.vercel.app). Bookmarks show the linked page's title and description.
 - **Fast first paint.** The lead image is loaded eagerly with `fetchpriority="high"`, the rest lazily.
 - **Bring your own styles.** Works with Tailwind's `prose` or any typography CSS; a stylesheet covers the Notion-specific parts.

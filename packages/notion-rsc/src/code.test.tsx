@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { NotionBlocks } from "./index.js";
 import { block, text } from "./test/blocks.js";
 import { renderToDom } from "./test/render.js";
@@ -8,6 +8,22 @@ const code = (content: string, language: string) =>
 const equation = (expression: string) => block("equation", { expression });
 
 describe("NotionBlocks code and equations", () => {
+  // As on Cloudflare Workers, which refuse to compile WebAssembly at runtime
+  beforeAll(() => {
+    const { CompileError } = WebAssembly;
+    const refuse = () => {
+      throw new CompileError("Wasm code generation disallowed");
+    };
+    vi.stubGlobal("WebAssembly", {
+      ...WebAssembly,
+      compile: refuse,
+      instantiate: refuse,
+    });
+  });
+  afterAll(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("highlights code with Shiki, in both light and dark themes", async () => {
     const dom = await renderToDom(
       <NotionBlocks blocks={[code("const a = 1;", "javascript")]} />,
@@ -16,6 +32,17 @@ describe("NotionBlocks code and equations", () => {
     const pre = dom.querySelector(".notion-code pre.shiki");
     expect(pre?.textContent).toBe("const a = 1;");
     expect(pre?.querySelector("span[style*='--shiki-dark']")).not.toBeNull();
+  });
+
+  it("colors SQL keywords", async () => {
+    const dom = await renderToDom(
+      <NotionBlocks blocks={[code("SELECT * FROM posts", "sql")]} />,
+    );
+
+    const select = [...dom.querySelectorAll(".notion-code pre span")].find(
+      (span) => span.textContent === "SELECT",
+    );
+    expect(select?.getAttribute("style")).toContain("--shiki-light:#D73A49");
   });
 
   it("falls back to plain text for languages Shiki does not know", async () => {

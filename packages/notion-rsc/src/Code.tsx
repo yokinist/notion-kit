@@ -1,4 +1,10 @@
-import { codeToHtml } from "shiki";
+import {
+  createBundledHighlighter,
+  createSingletonShorthands,
+} from "shiki/core";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
+import { bundledLanguages } from "shiki/langs";
+import { bundledThemes } from "shiki/themes";
 import { cx } from "./cx.js";
 
 // Notion language names that Shiki spells differently
@@ -9,6 +15,19 @@ const LANGUAGES: Record<string, string> = {
   "c#": "csharp",
   "java/c/c++/c#": "java",
 };
+
+// The JavaScript regex engine, not Shiki's default WASM one: Cloudflare
+// Workers refuse to compile WASM at runtime. With ES2018 regexes it colors
+// like the WASM engine (newer targets miss SQL keywords, among others), and
+// forgiving skips the few patterns it cannot translate instead of throwing.
+const { codeToHtml } = createSingletonShorthands(
+  createBundledHighlighter({
+    langs: bundledLanguages,
+    themes: bundledThemes,
+    engine: () =>
+      createJavaScriptRegexEngine({ target: "ES2018", forgiving: true }),
+  }),
+);
 
 const highlight = async (code: string, language: string) => {
   const options = {
