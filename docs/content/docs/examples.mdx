@@ -1,6 +1,6 @@
 ---
 title: Examples
-description: Small blogs on a Notion database, in Next.js, React Router and TanStack Start.
+description: Small blogs on a Notion database, in Next.js, React Router and TanStack Start, and one on Cloudflare Workers.
 ---
 
 Each example is a complete blog: a post list, post pages with links between posts, and a route that serves files uploaded to Notion. They read the same sample database, so you can compare how each framework does it.
@@ -10,6 +10,7 @@ Each example is a complete blog: a post list, post pages with links between post
 | [next-blog](https://github.com/yokinist/notion-kit/tree/main/examples/next-blog) | Next.js App Router, with static pages that revalidate every minute | [Open](https://notion-kit-next.vercel.app) |
 | [react-router-blog](https://github.com/yokinist/notion-kit/tree/main/examples/react-router-blog) | React Router in RSC Framework Mode, on Vite | [Open](https://notion-kit-react-router.vercel.app) |
 | [tanstack-start-blog](https://github.com/yokinist/notion-kit/tree/main/examples/tanstack-start-blog) | TanStack Start with Server Components, on Vite | [Open](https://notion-kit-tanstack-start.vercel.app) |
+| [cloudflare-blog](https://github.com/yokinist/notion-kit/tree/main/examples/cloudflare-blog) | React Router in RSC Framework Mode, on Cloudflare Workers | — |
 
 React Router's and TanStack Start's Server Components support is still experimental.
 
@@ -25,7 +26,7 @@ npm install
 npm run dev
 ```
 
-Swap `next-blog` for `react-router-blog` or `tanstack-start-blog` to start from another one.
+Swap `next-blog` for `react-router-blog`, `tanstack-start-blog` or `cloudflare-blog` to start from another one.
 
 ## What you need
 
@@ -38,5 +39,6 @@ Swap `next-blog` for `react-router-blog` or `tanstack-start-blog` to start from 
 - **Next.js** renders posts in Server Components and caches them with ISR. Links between posts use `next/link`.
 - **React Router** routes export a `ServerComponent`; the post is fetched in the route's `loader`, which also returns the 404.
 - **TanStack Start** loaders also run in the browser on navigation, so the post is fetched and rendered in a server function with `renderServerComponent`.
+- **Cloudflare Workers** run the React Router example in workerd through the Cloudflare Vite plugin. The Notion client needs `dangerouslyAllowBrowser: true` there, because it takes a Worker for a browser.
 
-In all three, the file route is one line: notion-fetch's `createFileHandler` takes a `Request` and returns a `Response`.
+In all of them, the file route is one line: notion-fetch's `createFileHandler` takes a `Request` and returns a `Response`.

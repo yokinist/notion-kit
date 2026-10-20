@@ -1,0 +1,7 @@
+node_modules
+.env*
+!.env.example
+.dev.vars*
+/.react-router/
+/build/
+/.wrangler/

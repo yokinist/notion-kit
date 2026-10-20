@@ -1,0 +1,9 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "notion-kit-cloudflare-blog",
+  // React Router's default RSC entry: the Worker's fetch handler
+  "main": "@react-router/dev/config/default-rsc-entries/entry.rsc",
+  "compatibility_date": "2026-10-01",
+  // process.env holds the Worker's variables and secrets
+  "compatibility_flags": ["nodejs_compat"]
+}
